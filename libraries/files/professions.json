@@ -1,0 +1,145 @@
+{
+  "theme": "Professions",
+  "words": [
+    {
+      "id": "p1",
+      "text": "teacher",
+      "category": "education",
+      "level": "A1",
+      "tags": ["education", "common", "service"]
+    },
+    {
+      "id": "p2",
+      "text": "doctor",
+      "category": "healthcare",
+      "level": "A1",
+      "tags": ["healthcare", "common", "medical"]
+    },
+    {
+      "id": "p3",
+      "text": "nurse",
+      "category": "healthcare",
+      "level": "A1",
+      "tags": ["healthcare", "common", "medical"]
+    },
+    {
+      "id": "p4",
+      "text": "student",
+      "category": "education",
+      "level": "A1",
+      "tags": ["education", "common", "learning"]
+    },
+    {
+      "id": "p5",
+      "text": "chef",
+      "category": "food_service",
+      "level": "A2",
+      "tags": ["food", "service", "restaurant"]
+    },
+    {
+      "id": "p6",
+      "text": "waiter",
+      "category": "food_service",
+      "level": "A2",
+      "tags": ["food", "service", "restaurant"]
+    },
+    {
+      "id": "p7",
+      "text": "engineer",
+      "category": "technology",
+      "level": "A2",
+      "tags": ["technology", "technical", "design"]
+    },
+    {
+      "id": "p8",
+      "text": "programmer",
+      "category": "technology",
+      "level": "B1",
+      "tags": ["technology", "computer", "software"]
+    },
+    {
+      "id": "p9",
+      "text": "lawyer",
+      "category": "legal",
+      "level": "A2",
+      "tags": ["legal", "professional", "law"]
+    },
+    {
+      "id": "p10",
+      "text": "police officer",
+      "category": "public_service",
+      "level": "A1",
+      "tags": ["safety", "public", "law"]
+    },
+    {
+      "id": "p11",
+      "text": "firefighter",
+      "category": "public_service",
+      "level": "A2",
+      "tags": ["safety", "public", "emergency"]
+    },
+    {
+      "id": "p12",
+      "text": "pilot",
+      "category": "transportation",
+      "level": "A2",
+      "tags": ["transport", "aviation", "travel"]
+    },
+    {
+      "id": "p13",
+      "text": "driver",
+      "category": "transportation",
+      "level": "A1",
+      "tags": ["transport", "common", "vehicle"]
+    },
+    {
+      "id": "p14",
+      "text": "artist",
+      "category": "creative",
+      "level": "A2",
+      "tags": ["creative", "art", "expression"]
+    },
+    {
+      "id": "p15",
+      "text": "musician",
+      "category": "creative",
+      "level": "A2",
+      "tags": ["creative", "music", "performance"]
+    },
+    {
+      "id": "p16",
+      "text": "actor",
+      "category": "creative",
+      "level": "A2",
+      "tags": ["creative", "performance", "entertainment"]
+    },
+    {
+      "id": "p17",
+      "text": "scientist",
+      "category": "research",
+      "level": "B1",
+      "tags": ["research", "academic", "discovery"]
+    },
+    {
+      "id": "p18",
+      "text": "journalist",
+      "category": "media",
+      "level": "B1",
+      "tags": ["media", "writing", "news"]
+    },
+    {
+      "id": "p19",
+      "text": "photographer",
+      "category": "creative",
+      "level": "B1",
+      "tags": ["creative", "visual", "art"]
+    },
+    {
+      "id": "p20",
+      "text": "architect",
+      "category": "design",
+      "level": "B1",
+      "tags": ["design", "building", "creative"]
+    }
+  ]
+}

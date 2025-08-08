@@ -1,0 +1,145 @@
+{
+  "theme": "Animals",
+  "words": [
+    {
+      "id": "a1",
+      "text": "cat",
+      "category": "pets",
+      "level": "A1",
+      "tags": ["pet", "domestic", "mammal", "common"]
+    },
+    {
+      "id": "a2",
+      "text": "dog",
+      "category": "pets",
+      "level": "A1",
+      "tags": ["pet", "domestic", "mammal", "common"]
+    },
+    {
+      "id": "a3",
+      "text": "hamster",
+      "category": "pets",
+      "level": "A2",
+      "tags": ["pet", "domestic", "mammal", "small"]
+    },
+    {
+      "id": "a4",
+      "text": "parrot",
+      "category": "pets",
+      "level": "A2",
+      "tags": ["pet", "domestic", "bird", "exotic"]
+    },
+    {
+      "id": "a5",
+      "text": "lion",
+      "category": "wild_animals",
+      "level": "A1",
+      "tags": ["wild", "mammal", "predator", "african"]
+    },
+    {
+      "id": "a6",
+      "text": "tiger",
+      "category": "wild_animals",
+      "level": "A1",
+      "tags": ["wild", "mammal", "predator", "asian"]
+    },
+    {
+      "id": "a7",
+      "text": "elephant",
+      "category": "wild_animals",
+      "level": "A1",
+      "tags": ["wild", "mammal", "large", "african", "asian"]
+    },
+    {
+      "id": "a8",
+      "text": "giraffe",
+      "category": "wild_animals",
+      "level": "A2",
+      "tags": ["wild", "mammal", "tall", "african"]
+    },
+    {
+      "id": "a9",
+      "text": "cheetah",
+      "category": "wild_animals",
+      "level": "B1",
+      "tags": ["wild", "mammal", "predator", "fast", "african"]
+    },
+    {
+      "id": "a10",
+      "text": "shark",
+      "category": "sea_animals",
+      "level": "A2",
+      "tags": ["sea", "fish", "predator", "dangerous"]
+    },
+    {
+      "id": "a11",
+      "text": "whale",
+      "category": "sea_animals",
+      "level": "A2",
+      "tags": ["sea", "mammal", "large", "marine"]
+    },
+    {
+      "id": "a12",
+      "text": "dolphin",
+      "category": "sea_animals",
+      "level": "A2",
+      "tags": ["sea", "mammal", "intelligent", "marine"]
+    },
+    {
+      "id": "a13",
+      "text": "octopus",
+      "category": "sea_animals",
+      "level": "B1",
+      "tags": ["sea", "mollusk", "intelligent", "marine"]
+    },
+    {
+      "id": "a14",
+      "text": "eagle",
+      "category": "birds",
+      "level": "A2",
+      "tags": ["bird", "predator", "flying", "symbol"]
+    },
+    {
+      "id": "a15",
+      "text": "owl",
+      "category": "birds",
+      "level": "A2",
+      "tags": ["bird", "predator", "nocturnal", "flying"]
+    },
+    {
+      "id": "a16",
+      "text": "penguin",
+      "category": "birds",
+      "level": "A2",
+      "tags": ["bird", "flightless", "antarctic", "swimming"]
+    },
+    {
+      "id": "a17",
+      "text": "snake",
+      "category": "reptiles",
+      "level": "A2",
+      "tags": ["reptile", "legless", "predator", "dangerous"]
+    },
+    {
+      "id": "a18",
+      "text": "turtle",
+      "category": "reptiles",
+      "level": "A2",
+      "tags": ["reptile", "slow", "shell", "land_animals"]
+    },
+    {
+      "id": "a19",
+      "text": "lizard",
+      "category": "reptiles",
+      "level": "B1",
+      "tags": ["reptile", "small", "land_animals"]
+    },
+    {
+      "id": "a20",
+      "text": "fox",
+      "category": "mammals",
+      "level": "A2",
+      "tags": ["mammal", "wild", "cunning", "land_animals"]
+    }
+  ]
+}

@@ -72,8 +72,7 @@ class Metadata():
             self.logger.error("More than one metadata block found. Just one allowed")
             return None
 
-        removed_newlines = found[0].strip().replace("\n", "")
-        fields = [f.strip() for f in removed_newlines.split(";")]
+        fields = [f.strip() for f in found[0].split(";")]
 
         # remove any extra empty or non-valid value
         filtered = []
@@ -134,8 +133,8 @@ class Metadata():
                     )
                     return False
 
-            self.logger.info("All values have been validated!")
-            return True
+        self.logger.info("All values have been validated!")
+        return True
 
     def create_base_structure(self, fields):
 

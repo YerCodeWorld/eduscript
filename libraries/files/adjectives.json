@@ -1,0 +1,145 @@
+{
+  "theme": "Adjectives",
+  "words": [
+    {
+      "id": "adj1",
+      "text": "happy",
+      "category": "emotions",
+      "level": "A1",
+      "tags": ["positive", "emotion", "common"]
+    },
+    {
+      "id": "adj2",
+      "text": "sad",
+      "category": "emotions",
+      "level": "A1",
+      "tags": ["negative", "emotion", "common"]
+    },
+    {
+      "id": "adj3",
+      "text": "angry",
+      "category": "emotions",
+      "level": "A1",
+      "tags": ["negative", "emotion", "strong"]
+    },
+    {
+      "id": "adj4",
+      "text": "excited",
+      "category": "emotions",
+      "level": "A2",
+      "tags": ["positive", "emotion", "energetic"]
+    },
+    {
+      "id": "adj5",
+      "text": "big",
+      "category": "size",
+      "level": "A1",
+      "tags": ["size", "large", "common"]
+    },
+    {
+      "id": "adj6",
+      "text": "small",
+      "category": "size",
+      "level": "A1",
+      "tags": ["size", "little", "common"]
+    },
+    {
+      "id": "adj7",
+      "text": "large",
+      "category": "size",
+      "level": "A1",
+      "tags": ["size", "big", "formal"]
+    },
+    {
+      "id": "adj8",
+      "text": "tiny",
+      "category": "size",
+      "level": "A2",
+      "tags": ["size", "very_small", "emphasis"]
+    },
+    {
+      "id": "adj9",
+      "text": "hot",
+      "category": "temperature",
+      "level": "A1",
+      "tags": ["temperature", "warm", "common"]
+    },
+    {
+      "id": "adj10",
+      "text": "cold",
+      "category": "temperature",
+      "level": "A1",
+      "tags": ["temperature", "cool", "common"]
+    },
+    {
+      "id": "adj11",
+      "text": "beautiful",
+      "category": "appearance",
+      "level": "A1",
+      "tags": ["appearance", "positive", "common"]
+    },
+    {
+      "id": "adj12",
+      "text": "ugly",
+      "category": "appearance",
+      "level": "A2",
+      "tags": ["appearance", "negative", "harsh"]
+    },
+    {
+      "id": "adj13",
+      "text": "fast",
+      "category": "speed",
+      "level": "A1",
+      "tags": ["speed", "quick", "common"]
+    },
+    {
+      "id": "adj14",
+      "text": "slow",
+      "category": "speed",
+      "level": "A1",
+      "tags": ["speed", "unhurried", "common"]
+    },
+    {
+      "id": "adj15",
+      "text": "intelligent",
+      "category": "mental",
+      "level": "B1",
+      "tags": ["mental", "smart", "positive"]
+    },
+    {
+      "id": "adj16",
+      "text": "stupid",
+      "category": "mental",
+      "level": "B1",
+      "tags": ["mental", "negative", "harsh"]
+    },
+    {
+      "id": "adj17",
+      "text": "difficult",
+      "category": "difficulty",
+      "level": "A2",
+      "tags": ["difficulty", "hard", "challenging"]
+    },
+    {
+      "id": "adj18",
+      "text": "easy",
+      "category": "difficulty",
+      "level": "A1",
+      "tags": ["difficulty", "simple", "common"]
+    },
+    {
+      "id": "adj19",
+      "text": "expensive",
+      "category": "cost",
+      "level": "A2",
+      "tags": ["cost", "money", "high"]
+    },
+    {
+      "id": "adj20",
+      "text": "cheap",
+      "category": "cost",
+      "level": "A2",
+      "tags": ["cost", "money", "low"]
+    }
+  ]
+}

@@ -1,4 +1,5 @@
 from metadata import Metadata
+from single.matching import Matching
 
 # This assumes your DSL is stored in a string
 data = """
@@ -15,6 +16,17 @@ data = """
 @content {
 
 }
+"""
+
+
+exercise = """
+
+    apple = red;
+    pear :: green;
+    grape  = purple;
+    banana = yellow;
+    = [blank, white];
+
 """
 
 def metadata():
@@ -42,10 +54,16 @@ def metadata():
     # we need to either append to some JSON or create a data structure
 
 def content():
-    pass
+    instance = Matching(exercise)
+    result = instance.parse_matching()
+    if result.ok:
+        print(result.value.model_dump())
+        is_valid = instance.validate_matching(result.value)
+        if not is_valid:
+            return
 
 def main():
-    metadata()
+    content()
 
 main()
 

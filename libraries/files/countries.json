@@ -1,0 +1,145 @@
+{
+  "theme": "Countries",
+  "words": [
+    {
+      "id": "c1",
+      "text": "Japan",
+      "category": "asian_countries",
+      "level": "A1",
+      "tags": ["asia", "island", "developed", "eastern"]
+    },
+    {
+      "id": "c2",
+      "text": "China",
+      "category": "asian_countries",
+      "level": "A1",
+      "tags": ["asia", "large", "populous", "eastern"]
+    },
+    {
+      "id": "c3",
+      "text": "India",
+      "category": "asian_countries",
+      "level": "A1",
+      "tags": ["asia", "large", "populous", "southern"]
+    },
+    {
+      "id": "c4",
+      "text": "Thailand",
+      "category": "asian_countries",
+      "level": "A2",
+      "tags": ["asia", "tourist", "tropical", "southeast"]
+    },
+    {
+      "id": "c5",
+      "text": "Vietnam",
+      "category": "asian_countries",
+      "level": "A2",
+      "tags": ["asia", "developing", "southeast"]
+    },
+    {
+      "id": "c6",
+      "text": "USA",
+      "category": "american_countries",
+      "level": "A1",
+      "tags": ["americas", "large", "developed", "north_america"]
+    },
+    {
+      "id": "c7",
+      "text": "Canada",
+      "category": "american_countries",
+      "level": "A1",
+      "tags": ["americas", "large", "cold", "north_america"]
+    },
+    {
+      "id": "c8",
+      "text": "Mexico",
+      "category": "american_countries",
+      "level": "A1",
+      "tags": ["americas", "spanish", "north_america"]
+    },
+    {
+      "id": "c9",
+      "text": "Brazil",
+      "category": "american_countries",
+      "level": "A1",
+      "tags": ["americas", "large", "portuguese", "south_america"]
+    },
+    {
+      "id": "c10",
+      "text": "Argentina",
+      "category": "american_countries",
+      "level": "A2",
+      "tags": ["americas", "spanish", "south_america"]
+    },
+    {
+      "id": "c11",
+      "text": "UK",
+      "category": "european_countries",
+      "level": "A1",
+      "tags": ["europe", "island", "english", "western"]
+    },
+    {
+      "id": "c12",
+      "text": "France",
+      "category": "european_countries",
+      "level": "A1",
+      "tags": ["europe", "tourist", "western"]
+    },
+    {
+      "id": "c13",
+      "text": "Germany",
+      "category": "european_countries",
+      "level": "A1",
+      "tags": ["europe", "industrial", "central"]
+    },
+    {
+      "id": "c14",
+      "text": "Italy",
+      "category": "european_countries",
+      "level": "A1",
+      "tags": ["europe", "tourist", "southern"]
+    },
+    {
+      "id": "c15",
+      "text": "Spain",
+      "category": "european_countries",
+      "level": "A1",
+      "tags": ["europe", "tourist", "southern"]
+    },
+    {
+      "id": "c16",
+      "text": "Egypt",
+      "category": "african_countries",
+      "level": "A2",
+      "tags": ["africa", "ancient", "pyramids", "northern"]
+    },
+    {
+      "id": "c17",
+      "text": "South Africa",
+      "category": "african_countries",
+      "level": "A2",
+      "tags": ["africa", "developed", "southern"]
+    },
+    {
+      "id": "c18",
+      "text": "Kenya",
+      "category": "african_countries",
+      "level": "B1",
+      "tags": ["africa", "safari", "eastern"]
+    },
+    {
+      "id": "c19",
+      "text": "Nigeria",
+      "category": "african_countries",
+      "level": "B1",
+      "tags": ["africa", "populous", "western"]
+    },
+    {
+      "id": "c20",
+      "text": "Morocco",
+      "category": "african_countries",
+      "level": "B1",
+      "tags": ["africa", "tourist", "northern"]
+    }
+  ]
+}

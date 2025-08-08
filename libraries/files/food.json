@@ -1,0 +1,145 @@
+{
+  "theme": "Food",
+  "words": [
+    {
+      "id": "f1",
+      "text": "apple",
+      "category": "fruits",
+      "level": "A1",
+      "tags": ["healthy", "fruit", "red_fruit", "common"]
+    },
+    {
+      "id": "f2",
+      "text": "banana",
+      "category": "fruits",
+      "level": "A1",
+      "tags": ["healthy", "fruit", "yellow", "common"]
+    },
+    {
+      "id": "f3",
+      "text": "orange",
+      "category": "fruits",
+      "level": "A1",
+      "tags": ["healthy", "fruit", "citrus", "common"]
+    },
+    {
+      "id": "f4",
+      "text": "strawberry",
+      "category": "fruits",
+      "level": "A1",
+      "tags": ["healthy", "fruit", "red_fruit", "berries"]
+    },
+    {
+      "id": "f5",
+      "text": "watermelon",
+      "category": "fruits",
+      "level": "A2",
+      "tags": ["healthy", "fruit", "summer", "large"]
+    },
+    {
+      "id": "f6",
+      "text": "mango",
+      "category": "fruits",
+      "level": "A2",
+      "tags": ["healthy", "fruit", "tropical", "exotic"]
+    },
+    {
+      "id": "f7",
+      "text": "dragon fruit",
+      "category": "fruits",
+      "level": "C1",
+      "tags": ["healthy", "fruit", "exotic", "tropical"]
+    },
+    {
+      "id": "f8",
+      "text": "pizza",
+      "category": "junk",
+      "level": "A1",
+      "tags": ["fast_food", "junk", "italian", "popular"]
+    },
+    {
+      "id": "f9",
+      "text": "hamburger",
+      "category": "junk",
+      "level": "A1",
+      "tags": ["fast_food", "junk", "american", "popular"]
+    },
+    {
+      "id": "f10",
+      "text": "french fries",
+      "category": "junk",
+      "level": "A2",
+      "tags": ["fast_food", "junk", "side", "popular"]
+    },
+    {
+      "id": "f11",
+      "text": "carrot",
+      "category": "vegetables",
+      "level": "A1",
+      "tags": ["healthy", "vegetable", "orange", "common"]
+    },
+    {
+      "id": "f12",
+      "text": "broccoli",
+      "category": "vegetables",
+      "level": "A2",
+      "tags": ["healthy", "vegetable", "green", "common"]
+    },
+    {
+      "id": "f13",
+      "text": "spinach",
+      "category": "vegetables",
+      "level": "B1",
+      "tags": ["healthy", "vegetable", "green", "leafy"]
+    },
+    {
+      "id": "f14",
+      "text": "bread",
+      "category": "grains",
+      "level": "A1",
+      "tags": ["staple", "grain", "bakery", "common"]
+    },
+    {
+      "id": "f15",
+      "text": "rice",
+      "category": "grains",
+      "level": "A1",
+      "tags": ["staple", "grain", "asian", "common"]
+    },
+    {
+      "id": "f16",
+      "text": "pasta",
+      "category": "grains",
+      "level": "A1",
+      "tags": ["staple", "grain", "italian", "common"]
+    },
+    {
+      "id": "f17",
+      "text": "chicken",
+      "category": "meat",
+      "level": "A1",
+      "tags": ["protein", "meat", "poultry", "common"]
+    },
+    {
+      "id": "f18",
+      "text": "beef",
+      "category": "meat",
+      "level": "A2",
+      "tags": ["protein", "meat", "red_meat", "common"]
+    },
+    {
+      "id": "f19",
+      "text": "salmon",
+      "category": "seafood",
+      "level": "B1",
+      "tags": ["protein", "seafood", "fish", "healthy"]
+    },
+    {
+      "id": "f20",
+      "text": "lobster",
+      "category": "seafood",
+      "level": "B2",
+      "tags": ["protein", "seafood", "expensive", "luxury"]
+    }
+  ]
+}

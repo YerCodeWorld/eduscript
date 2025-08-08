@@ -1,0 +1,145 @@
+{
+  "theme": "Colors",
+  "words": [
+    {
+      "id": "col1",
+      "text": "red",
+      "category": "basic_colors",
+      "level": "A1",
+      "tags": ["basic", "primary", "warm"]
+    },
+    {
+      "id": "col2",
+      "text": "blue",
+      "category": "basic_colors",
+      "level": "A1",
+      "tags": ["basic", "primary", "cool"]
+    },
+    {
+      "id": "col3",
+      "text": "yellow",
+      "category": "basic_colors",
+      "level": "A1",
+      "tags": ["basic", "primary", "warm", "bright"]
+    },
+    {
+      "id": "col4",
+      "text": "green",
+      "category": "basic_colors",
+      "level": "A1",
+      "tags": ["basic", "secondary", "nature"]
+    },
+    {
+      "id": "col5",
+      "text": "orange",
+      "category": "basic_colors",
+      "level": "A1",
+      "tags": ["basic", "secondary", "warm"]
+    },
+    {
+      "id": "col6",
+      "text": "purple",
+      "category": "basic_colors",
+      "level": "A1",
+      "tags": ["basic", "secondary", "royal"]
+    },
+    {
+      "id": "col7",
+      "text": "black",
+      "category": "basic_colors",
+      "level": "A1",
+      "tags": ["basic", "neutral", "dark"]
+    },
+    {
+      "id": "col8",
+      "text": "white",
+      "category": "basic_colors",
+      "level": "A1",
+      "tags": ["basic", "neutral", "light"]
+    },
+    {
+      "id": "col9",
+      "text": "pink",
+      "category": "basic_colors",
+      "level": "A1",
+      "tags": ["basic", "pastel", "warm"]
+    },
+    {
+      "id": "col10",
+      "text": "brown",
+      "category": "basic_colors",
+      "level": "A1",
+      "tags": ["basic", "earth", "warm"]
+    },
+    {
+      "id": "col11",
+      "text": "gray",
+      "category": "basic_colors",
+      "level": "A2",
+      "tags": ["basic", "neutral", "muted"]
+    },
+    {
+      "id": "col12",
+      "text": "turquoise",
+      "category": "advanced_colors",
+      "level": "B1",
+      "tags": ["advanced", "blue-green", "cool"]
+    },
+    {
+      "id": "col13",
+      "text": "magenta",
+      "category": "advanced_colors",
+      "level": "B1",
+      "tags": ["advanced", "bright", "pink-purple"]
+    },
+    {
+      "id": "col14",
+      "text": "cyan",
+      "category": "advanced_colors",
+      "level": "B2",
+      "tags": ["advanced", "primary-print", "cool"]
+    },
+    {
+      "id": "col15",
+      "text": "maroon",
+      "category": "advanced_colors",
+      "level": "B1",
+      "tags": ["advanced", "dark-red", "warm"]
+    },
+    {
+      "id": "col16",
+      "text": "navy",
+      "category": "advanced_colors",
+      "level": "B1",
+      "tags": ["advanced", "dark-blue", "cool"]
+    },
+    {
+      "id": "col17",
+      "text": "beige",
+      "category": "advanced_colors",
+      "level": "B1",
+      "tags": ["advanced", "neutral", "light"]
+    },
+    {
+      "id": "col18",
+      "text": "khaki",
+      "category": "advanced_colors",
+      "level": "B2",
+      "tags": ["advanced", "earth", "military"]
+    },
+    {
+      "id": "col19",
+      "text": "crimson",
+      "category": "advanced_colors",
+      "level": "C1",
+      "tags": ["advanced", "deep-red", "intense"]
+    },
+    {
+      "id": "col20",
+      "text": "vermillion",
+      "category": "advanced_colors",
+      "level": "C2",
+      "tags": ["advanced", "red-orange", "artistic"]
+    }
+  ]
+}
