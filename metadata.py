@@ -137,6 +137,10 @@ class Metadata():
         return True
 
     def create_base_structure(self, fields):
+        """
+        Taken that using an outer function the fields have being validated and filtered,
+        this function populates the attributes of the class to later be used to create a model_dump
+        """
 
         attr_map = {
             "type": "type",

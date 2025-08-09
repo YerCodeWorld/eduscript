@@ -93,7 +93,7 @@ class Ordering:
         return ParseResult(ok=True, content=OrderingBase(values=items), error=[])
 
     @staticmethod
-    def validate_ordering(data):
+    def validate_ordering(data) -> bool:
         errors = []
 
         return len(errors) == 0
