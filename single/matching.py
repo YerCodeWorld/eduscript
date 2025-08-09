@@ -1,6 +1,7 @@
 import re
 from dataclasses import dataclass
 from logger_base import get_logger
+from dataclasses import dataclass
 from pydantic import BaseModel
 from typing import List, Optional
 
@@ -13,12 +14,14 @@ class Pair(BaseModel):
 class MatchingContent(BaseModel):
     pairs: List[Pair]
     distractors: Optional[List[str]] = None
+    points: Optional[List[int]]
 
 @dataclass
 class ParseResult:
     ok: bool
     value: Optional[MatchingContent] = None
     error: str = None
+
 
 # Constraints
 """

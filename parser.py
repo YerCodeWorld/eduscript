@@ -1,5 +1,7 @@
 from metadata import Metadata
 from single.matching import Matching
+from single.ordering import Ordering
+from sample_data import ordering_sample
 
 # This assumes your DSL is stored in a string
 data = """
@@ -19,7 +21,7 @@ data = """
 """
 
 
-exercise = """
+match = """
 
     apple = red;
     pear :: green;
@@ -54,13 +56,14 @@ def metadata():
     # we need to either append to some JSON or create a data structure
 
 def content():
-    instance = Matching(exercise)
-    result = instance.parse_matching()
+    instance = Ordering(ordering_sample)
+    result = instance.parse_ordering()
     if result.ok:
-        print(result.value.model_dump())
-        is_valid = instance.validate_matching(result.value)
-        if not is_valid:
-            return
+        print(result.content.model_dump())
+        # is_valid = instance.validate_matching(result.value)
+        # if not is_valid:
+        #    return
+
 
 def main():
     content()
