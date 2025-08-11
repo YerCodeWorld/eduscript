@@ -4,6 +4,7 @@ from logger_base import get_logger
 from dataclasses import dataclass
 from pydantic import BaseModel
 from typing import List, Optional
+from single.helpers import remove_distractors
 
 # Pair type
 class Pair(BaseModel):
@@ -19,7 +20,7 @@ class MatchingContent(BaseModel):
 @dataclass
 class ParseResult:
     ok: bool
-    value: Optional[MatchingContent] = None
+    content: Optional[MatchingContent] = None
     error: str = None
 
 
@@ -50,24 +51,21 @@ class Matching:
     def __init__(self, content: str):
 
         self.content = content
-        self._distractors_re = re.compile(r"^\s*=\s*\[(.*?)\]\s*$")
         self.logger = get_logger(self.__class__.__name__)
 
     def parse_matching(self) -> ParseResult:
 
-        pairs: List[Pair] = []
-        distractors: Optional[List[str]] = None
+        # PATTERN FOR EXTRA: @EXTRA = [ value1 | value2 ]
+        result = remove_distractors(self.content)
+        if not result.ok:
+            return result.error
+        distractors = result.data
+        self.content = result.result_string
 
+        pairs: List[Pair] = []
         chunks = [c.strip() for c in self.content.split(";") if c.strip()]
 
         for sn in chunks:
-
-            m = self._distractors_re.match(sn)
-            if m:
-                vals = [v.strip() for v in m.group(1).split(",") if v.strip()]
-                distractors = vals or None
-                self.logger.info(f"Distractors: {distractors}")
-                continue
 
             has_eq = '=' in sn
             has_colon = '::' in sn
@@ -88,7 +86,7 @@ class Matching:
 
             pairs.append(Pair(left=left, right=right))
 
-        return ParseResult(ok=True, value=MatchingContent(pairs=pairs, distractors=distractors), error=[])
+        return ParseResult(ok=True, content=MatchingContent(pairs=pairs, distractors=distractors, points=[]), error=[])
 
     def validate_matching(self, content: MatchingContent) -> bool:
         errors = []

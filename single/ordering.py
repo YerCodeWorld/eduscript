@@ -3,6 +3,7 @@ from logger_base import get_logger
 from dataclasses import dataclass
 from pydantic import BaseModel
 from typing import List, Optional
+from single.helpers import extract_instructions, parse_mcq_pattern
 
 class OrderingContent(BaseModel):
     instruction: Optional[str]
@@ -16,7 +17,7 @@ class OrderingBase(BaseModel):
 class ParseResult:
     ok: bool
     content: Optional[OrderingContent] = None
-    error: Optional[str] = None
+    errors: Optional[List[str]] = None
 
 # Constraints
 
@@ -60,27 +61,18 @@ class Ordering:
             ins: str = ""
             distractors: List[str] = None
 
-            # Makes it so that we can write until we find a ';', and instructions logic would still work
-            if "\n" in sn and "#" in sn.split("\n")[0]:
-                lines = sn.split("\n")
-                if lines[0].startswith("#"):
-                    ins = lines[0][1:].strip() # slice to remove '#'
-                    sn = ' '.join(lines[1:])
-                    # we should raise a warning else
+            result = extract_instructions(sn)
+            if result.ok:
+                ins = result.data
+                sn = result.result_string.replace("\n", " ")
 
-            m = distractor_re.findall(sn)
-            # substitute match with none
-            sn = distractor_re.sub("", sn)
+            # This is what I was talking about, ordering can benefit from mcq pattern as many exercise types
+            result = parse_mcq_pattern(sn, True)
+            if not result.ok:
+                return ParseResult(ok=False, errors=[result.errors])
 
-            # edge-case: non-critical, but return just because
-            if sn.replace("|", "").strip() == "":
-                return ParseResult(ok=False, error="Empty sentence found. Did you create a sentence with distractors [...] only?")
-
-            if m:
-                distractors = m or []
-
-            sn = [s.strip() for s in sn.split("|")] if "|" in sn else [sn]
-            sn = [s for s in sn if s.strip()] # removing any remaining empty items
+            sn = result.result_string
+            distractors = result.data
             """
             print(f"
                 Sentence: {sn}
@@ -90,7 +82,7 @@ class Ordering:
             """
             items.append(OrderingContent(instruction=ins, content=sn, distractors=distractors))
 
-        return ParseResult(ok=True, content=OrderingBase(values=items), error=[])
+        return ParseResult(ok=True, content=OrderingBase(values=items))
 
     @staticmethod
     def validate_ordering(data) -> bool:

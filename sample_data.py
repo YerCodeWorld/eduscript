@@ -16,7 +16,7 @@ matching_sample = """
     pear :: green;
     grape  = purple;
     banana = yellow;
-    = [blank, white];
+    @EXTRA = [blank | white];
 
 """
 mcq_sample = """
@@ -64,5 +64,41 @@ we   | go    |   to work | at |seven;
 He   | brushes | his   | teeth | [bed] | with | colgate;
 
 they | have    | lunch | together;
+"""
+
+categorize_sample = """
+
+ANIMALS = Lion | Chicken | Tiger | Dog | Cat;
+FRUITS = Banana | apple | Pear | Orage | Dragon Fruit;
+COLORS = Blue | Red | White | Green | Black;
+CLASSROOM = Pencil | Notebook | School Bag | Computer | Eraser;
+
+"""
+
+select_sample = """
+# Select all the verbs
+I [am] someone who [knows] when everything
+[turns] bad and destiny [decides] it's time
+for trouble.;
+
+# Select all the adjectives
+We [never] considered such an [amazing] person
+to be this [bad]. What could actually have been
+just a [smooth] step in the middle turned out
+to be [horrific].;
+"""
+
+blanks_sample = """
+# Your mother's son
+I *am|'m* your *brother|bro*;
+He *is|'s* your *sister|sis*;
+
+# Verb to be and fa____
+We *are|'re* a *family|fam*;
+
+# The place you go to study
+Sc*hool*;
+
+Some people *eat|[think | believe]|sleep* that we are together;
 """
 
