@@ -17,6 +17,7 @@ class BlanksContent(BaseModel):
     sentence: str
     blanks: List[Blank]
     instruction: Optional[str]
+    points: Optional[List[int]] = None
 
 class BlanksWrapper(BaseModel):
     content: List[BlanksContent]

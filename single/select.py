@@ -8,6 +8,7 @@ class SelectContent(BaseModel):
     instruction: str
     paragraph: str
     selections: List[str]
+    points: Optional[List[int]]
 
 class SelectWrapper(BaseModel):
     content: List[SelectContent]

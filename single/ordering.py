@@ -9,6 +9,7 @@ class OrderingContent(BaseModel):
     instruction: Optional[str]
     content: List[str]
     distractors: Optional[List[str]]
+    points: Optional[List[int]]
 
 class OrderingBase(BaseModel):
     values: List[OrderingContent]
