@@ -34,7 +34,7 @@ class DisplayStyle(Enum):
     DARK = "dark"
 
 class MaxValuesLength(Enum):
-    TITLE = 20
+    TITLE = 50
     VARIATION = 10
     STYLE = 10
     INSTRUNCTIONS = 50
@@ -54,3 +54,5 @@ class ValidMetadataBlock(Enum):
     CATEGORY = "category"
     ISPUBLISHED = "isPublished"
     PACKAGEID = "packageId"
+
+

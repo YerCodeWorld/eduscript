@@ -1,32 +1,8 @@
 import re
 from typing import List, Optional
 from pydantic import BaseModel
-from dataclasses import dataclass
 from single.helpers import extract_instructions, parse_mcq_pattern
-
-# I believe this works well for
-# The *GYM* is the place *where* we exercise
-# index: 1, correct_answers: ["GYM"]
-class Blank(BaseModel):
-    position: int
-    correct_options: Optional[List[str]]
-    options: Optional[List[str]]
-
-# So then this model can do a list of those from a single sentence
-class BlanksContent(BaseModel):
-    sentence: str
-    blanks: List[Blank]
-    instruction: Optional[str]
-    points: Optional[List[int]] = None
-
-class BlanksWrapper(BaseModel):
-    content: List[BlanksContent]
-
-@dataclass
-class ParseResult:
-    ok: bool
-    content: Optional[BlanksWrapper] = None
-    errors: Optional[List[str]] = None
+from src.models import ParseResult, Blank, BlanksContent, BlanksWrapper
 
 class Blanks:
 
@@ -69,7 +45,7 @@ class Blanks:
         return blanks
 
 
-    def parse_blanks(self):
+    def parse_content(self):
 
         items: List[BlanksContent] = []
         chunks = [ch.strip() for ch in self.exercise.split(";")]

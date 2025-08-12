@@ -8,9 +8,11 @@ from single.select import Select
 from single.blanks import Blanks
 from sample_data import *
 from pydantic import BaseModel
-from typing import List, Optional
+from typing import List, Optional, Union
 from enum import Enum
 from logger_base import get_logger
+
+from src.models import *
 
 # Process might look like this:
 
@@ -42,12 +44,22 @@ class MetadataBody(BaseModel):
     variation: Optional[str] = "original"
     is_published: Optional[bool] = False
 
-class ContentBody(BaseModel):
+class ExerciseContent(BaseModel):
     type: Optional[str]
     variation: Optional[str]
-    content: str
+    content: Union[
+            'BlanksWrapper',
+            'SelectWrapper',
+            'MCQwrapper',
+            'OrderingWrapper',
+            'CategorizeWrapper',
+            'MatchingContent'
+        ]
 
-
+class Exercise(BaseModel):
+    mode: str
+    metadata: MetadataBody
+    content: List[ExerciseContent]
 
 class Parser:
 
@@ -55,28 +67,42 @@ class Parser:
         self.exercise = exercise
         self.mode: Mode = Mode.SINGLE.value
         self.metadata: MetadataBody = None
-        self.content: ContentBody = None
+        self.content: List[ExerciseContent] = []
+
+        self.result: Exercise = None
 
         self.logger = get_logger(self.__class__.__name__)
+
+    @staticmethod
+    def extract_content(s, is_multiple=False):
+        content_re = re.compile(r"@content\s*.*?{(.*?)}", re.DOTALL)
+        content: str = None
+
+        if not is_multiple:
+            return content_re.findall(s)[0]
+
+
 
     def extract_mode(self):
         mode_re = re.compile(r"\s*.*?@MODE=multiple")
         is_multiple = len(re.findall(mode_re, self.exercise)) != 0
         if is_multiple:
             self.mode = Mode.MULTIPLE.value
+            # Remove from current string
+            self.exercise = mode_re.sub("", self.exercise)
 
     def parse_metadata(self):
         instance = Metadata(self.exercise)
         block = instance.extract_metadata_blocks()
 
         if not block:
-            return ValueError("No metadata blocks found")
+            return ValueError
 
         if not instance.validate_metadata_keys(block):
-            return ValueError("Found invalid Metadata key")
+            return ValueError
 
         if not instance.validate_metadata_values(block):
-            return ValueError("Found invalid metadata value")
+            return ValueError
 
         instance.create_base_structure(block)
 
@@ -92,37 +118,50 @@ class Parser:
                 is_published=instance.is_published
             )
 
-    def extract_content():
-        pass
+        self.exercise = instance.remove_metadata_block(self.exercise).strip()
 
     def parse_type(self):
-        instance = Blanks(blanks_sample)
-        result = instance.parse_blanks()
+
+        class_mapping = {
+            'blanks': Blanks,
+            'ordering': Ordering,
+            'mcq': MCQ,
+            'categorize': Categorize,
+            'select': Select,
+            'matching': Matching
+        }
+
+        class_type = class_mapping.get(self.metadata.type)
+
+        instance = class_type(self.exercise)
+        result = instance.parse_content()
         if result.ok:
-            print(result.content.model_dump())
+            self.content.append(ExerciseContent(type=self.metadata.type, variation=self.metadata.variation, content=result.content))
         else:
             print(result.errors)
-            # is_valid = instance.validate_matching(result.value)
-            # if not is_valid:
-            #    return
 
     def run(self):
         self.extract_mode()
         self.logger.info(f"Determined mode: {self.mode}")
 
-        self.parse_metadata()
-        print(self.metadata)
+        r = self.parse_metadata()
+        if r == ValueError:
+            return None
 
-        if self.mode = Mode.MULTIPLE.value:
-            pass
+        self.logger.info(self.metadata)
+        if self.mode == Mode.MULTIPLE.value:
+            self.logger.warning("Exercise is multiple")
 
+        self.exercise = self.extract_content(self.exercise)
+        self.parse_type()
+
+        exercise = Exercise(mode=self.mode, metadata=self.metadata, content=self.content)
+        print(exercise.model_dump())
 
 exercise = """
-@MODE=multiple
-
 @metadata {
-  type= blanks;
-  title = myLife;
+  type = ordering;
+  title = The best time of my life;
   instructions = Do not die please;
   difficulty=BEGINNER;
   isPublished = true;
@@ -130,12 +169,21 @@ exercise = """
   style = nature;
 }
 
-[type=blanks, variation=original]
 @content {
-    // ...
+# Don't get distracted!
+She  | takes | a   | shower | in | the | morning | [forgets] | [likes];
+they | do    | the | homework;
+I    | watch | [cooking] | tv | in | the| afternoon;
+we   | go    |   to work | at |seven;
 
+# Can you brush that!??
+He   | brushes | his   | teeth | [bed] | with | colgate;
+
+they | have    | lunch | together;
 }
 """
 
 instance = Parser(exercise)
-instance.run()
+result = instance.run()
+if not result:
+    print("Oops!")

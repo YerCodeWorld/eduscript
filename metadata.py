@@ -48,7 +48,7 @@ class Metadata():
         return s[1:-1] if (len(s) >= 2 and s[0] in "'\"" and s[-1] == s[0]) else s
 
     @staticmethod
-    def canonical_enum(enum_cls, val: str) -> str:
+    def canonical_enum(enum_cls, val: str):
         """
         Validate a fiven enum value
 
@@ -59,7 +59,12 @@ class Metadata():
             return enum_cls(val.strip().lower()).value
         except ValueError:
             print(f"Invalid enum value '{val}' for {enum_cls.__name__}")
-            raise
+            return False
+
+    @staticmethod
+    def remove_metadata_block(s):
+        metadata_reg = re.compile(r"@metadata\s*.*?{(.*?)}", re.DOTALL)
+        return metadata_reg.sub("", s)
 
     def extract_metadata_blocks(self):
         found = re.findall(r"@metadata\s*.*?{(.*?)}", self.data, re.DOTALL)
@@ -123,14 +128,14 @@ class Metadata():
 
             if key in self.enums:
                 val = self.canonical_enum(self.enums[key], val)
+                if not val:
+                    return False
 
             # enforce max length for free-text fields
             if key in self.max_length and len(val) > self.max_length[key]:
                 v = self.strip_quotes(val)
                 if len(v) > self.max_length[key]:
-                    self.logger.error(
-                        f"Value too long for '{key}' ({len(v)} > {self.max_length[key]})"
-                    )
+                    self.logger.error(f"Value too long for '{key}' ({len(v)} > {self.max_length[key]})")
                     return False
 
         self.logger.info("All values have been validated!")

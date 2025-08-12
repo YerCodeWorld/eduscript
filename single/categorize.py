@@ -1,24 +1,9 @@
 import re
 from typing import List, Optional
-from pydantic import BaseModel
-from dataclasses import dataclass
 from sample_data import categorize_sample
 from single.helpers import remove_distractors
 
-class CategoryContent(BaseModel):
-    category: str
-    items: List[str]
-    points: Optional[List[int]]
-
-class CategoryBody(BaseModel):
-    categories: List[CategoryContent]
-    distractors: Optional[List[str]] = None
-
-@dataclass
-class ParseResult:
-    ok: bool
-    content: Optional[CategoryBody] = None
-    errors: Optional[List[str]] = None
+from src.models import ParseResult, CategorizeContent, CategorizeWrapper
 
 class Categorize:
 
@@ -26,7 +11,7 @@ class Categorize:
 
         self.content = content
 
-    def parse_categorize(self):
+    def parse_content(self):
 
         # PATTERN FOR EXTRA: @EXTRA = [ value1 | value2 ]
         result = remove_distractors(self.content)
@@ -35,7 +20,7 @@ class Categorize:
         distractors = result.data
         exercise = result.result_string
 
-        items: List[CategoryContent] = []
+        items: List[CategorizeContent] = []
         chunks = [c.strip() for c in exercise.split(";")]
 
         for i, sn in enumerate(chunks):
@@ -62,12 +47,12 @@ class Categorize:
 
             values = [s.strip() for s in sn.split("|") if "|" in sn]
 
-            items.append(CategoryContent(category=category, items=values, points=[]))
+            items.append(CategorizeContent(category=category, items=values, points=[]))
 
         # We could add logic for breaking single categories exercises, but we'll let that to the validator
-        return ParseResult(ok=True, content=CategoryBody(categories=items, distractors=distractors))
+        return ParseResult(ok=True, content=CategorizeWrapper(categories=items, distractors=distractors))
 
-    def validate_categoroize(data):
+    def validate_categorize(data):
         errors = []
 
 

@@ -1,25 +1,8 @@
 import re
-from pydantic import BaseModel
-from dataclasses import dataclass
 from typing import List, Optional
 from single.helpers import extract_instructions, parse_mcq_pattern
 
-class MCQcontent(BaseModel):
-    question: str
-    options: List[str]
-    correctOptions: List[str]
-    # adding now, but logic for this will be relevant come updates on
-    points: Optional[List[int]]
-
-class MCQwrapper(BaseModel):
-    content: List[MCQcontent]
-
-@dataclass
-class ParseResult:
-    ok: bool
-    content: Optional[MCQwrapper] = None
-    errors: Optional[List[str]] = None
-
+from src.models import ParseResult, MCQcontent, MCQwrapper
 
 class MCQ:
 
@@ -32,7 +15,7 @@ class MCQ:
         }
 
 
-    def parse_mcq(self) -> ParseResult:
+    def parse_content(self) -> ParseResult:
 
         # CONVERED EDGE-CASES
 
@@ -59,7 +42,7 @@ class MCQ:
             # instructions are MANDATORY in this exercise type, unlike ordering for example
             result = extract_instructions(sn)
             if not result.ok:
-                return ParseResult(ok=False, errors=[result.errors, p])
+                return ParseResult(ok=False, errors=[result.errors, sn])
             question = result.data
             sn = result.result_string.replace("\n", " ")
 
@@ -67,6 +50,9 @@ class MCQ:
             if not result.ok:
                 return ParseResult(ok=False, errors=[result.errors, sn])
             correct_options = result.data
+            if len(correct_options) == 0:
+                return ParseResult(ok=False, errors=["Sentence does not have any correct options", sn])
+
             options = result.result_string
 
             items.append(MCQcontent(question=question, options=options, correctOptions=correct_options, points=[]))

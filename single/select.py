@@ -1,23 +1,7 @@
 import re
 from typing import List, Optional
-from pydantic import BaseModel
-from dataclasses import dataclass
 from single.helpers import extract_instructions
-
-class SelectContent(BaseModel):
-    instruction: str
-    paragraph: str
-    selections: List[str]
-    points: Optional[List[int]]
-
-class SelectWrapper(BaseModel):
-    content: List[SelectContent]
-
-@dataclass
-class ParseResult:
-    ok: bool
-    content: Optional[SelectWrapper] = None
-    errors: Optional[List[str]] = None
+from src.models import ParseResult, SelectContent, SelectWrapper
 
 # Parses something like this
 """
@@ -40,7 +24,7 @@ class Select:
         self.data = exercise
         self.pattern = re.compile(r"\[([a-zA-Z]+)\]")
 
-    def parse_select(self):
+    def parse_content(self):
 
         chunks = [c.strip() for c in self.data.split(";")]
         items: List[SelectContent] = []

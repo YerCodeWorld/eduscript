@@ -1,24 +1,9 @@
 import re
 from logger_base import get_logger
-from dataclasses import dataclass
-from pydantic import BaseModel
 from typing import List, Optional
 from single.helpers import extract_instructions, parse_mcq_pattern
 
-class OrderingContent(BaseModel):
-    instruction: Optional[str]
-    content: List[str]
-    distractors: Optional[List[str]]
-    points: Optional[List[int]]
-
-class OrderingBase(BaseModel):
-    values: List[OrderingContent]
-
-@dataclass
-class ParseResult:
-    ok: bool
-    content: Optional[OrderingContent] = None
-    errors: Optional[List[str]] = None
+from src.models import ParseResult, OrderingContent, OrderingWrapper
 
 # Constraints
 
@@ -47,7 +32,7 @@ class Ordering:
         self.logger = get_logger(self.__class__.__name__)
         self.distractor_re = ""  # update this instead
 
-    def parse_ordering(self) -> ParseResult:
+    def parse_content(self) -> ParseResult:
 
         items: List[OrderingContent] = []
 
@@ -72,6 +57,9 @@ class Ordering:
             if not result.ok:
                 return ParseResult(ok=False, errors=[result.errors])
 
+            if len(result.result_string) < 3:
+                return ParseResult(ok=False, errors=["Sentence with too little values", sn])
+
             sn = result.result_string
             distractors = result.data
             """
@@ -83,7 +71,7 @@ class Ordering:
             """
             items.append(OrderingContent(instruction=ins, content=sn, distractors=distractors))
 
-        return ParseResult(ok=True, content=OrderingBase(values=items))
+        return ParseResult(ok=True, content=OrderingWrapper(content=items))
 
     @staticmethod
     def validate_ordering(data) -> bool:
