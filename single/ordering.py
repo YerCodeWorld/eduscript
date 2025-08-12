@@ -2,11 +2,10 @@ import re
 from logger_base import get_logger
 from typing import List, Optional
 from single.helpers import extract_instructions, parse_mcq_pattern
-
+from src.helpers import extract_type
 from src.models import ParseResult, OrderingContent, OrderingWrapper
 
 # Constraints
-
 """
 Model
 
@@ -29,15 +28,25 @@ class Ordering:
     def __init__(self, exercise):
 
         self.exercise = exercise
+        self.type = None
+        self.variation = None
+
         self.logger = get_logger(self.__class__.__name__)
-        self.distractor_re = ""  # update this instead
+
+    def initial_load(self):
+
+        r = extract_type(self.exercise)
+        if isinstance(r, ValueError):
+            return ParseResult(ok=False, errors=[r])
+        self.type, self.variation = r[0].strip(), r[1].strip()
+        return ParseResult(ok=True)
 
     def parse_content(self) -> ParseResult:
 
         items: List[OrderingContent] = []
 
         chunks = [c.strip() for c in self.exercise.split(";")]
-        distractor_re = re.compile(r"\[(.*?)\]")
+        # distractor_re = re.compile(r"\[(.*?)\]")
 
         for sn in chunks:
 
@@ -71,7 +80,9 @@ class Ordering:
             """
             items.append(OrderingContent(instruction=ins, content=sn, distractors=distractors))
 
-        return ParseResult(ok=True, content=OrderingWrapper(content=items))
+        return ParseResult(
+            ok=True, content=OrderingWrapper(type=self.type, variation=self.variation, content=items)
+            )
 
     @staticmethod
     def validate_ordering(data) -> bool:

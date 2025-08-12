@@ -2,19 +2,30 @@ import re
 from typing import List, Optional
 from sample_data import categorize_sample
 from single.helpers import remove_distractors
+from src.helpers import extract_type
 
 from src.models import ParseResult, CategorizeContent, CategorizeWrapper
 
 class Categorize:
 
-    def __init__(self, content):
+    def __init__(self, exercise):
 
-        self.content = content
+        self.exercise = exercise
+        self.type = None
+        self.variation = None
+
+    def initial_load(self):
+
+        r = extract_type(self.exercise)
+        if isinstance(r, ValueError):
+            return ParseResult(ok=False, errors=[r])
+        self.type, self.variation = r[0].strip(), r[1].strip()
+        return ParseResult(ok=True)
 
     def parse_content(self):
 
         # PATTERN FOR EXTRA: @EXTRA = [ value1 | value2 ]
-        result = remove_distractors(self.content)
+        result = remove_distractors(self.exercise)
         if not result.ok:
             return result.error
         distractors = result.data
@@ -50,7 +61,9 @@ class Categorize:
             items.append(CategorizeContent(category=category, items=values, points=[]))
 
         # We could add logic for breaking single categories exercises, but we'll let that to the validator
-        return ParseResult(ok=True, content=CategorizeWrapper(categories=items, distractors=distractors))
+        return ParseResult(
+            ok=True, content=CategorizeWrapper(type=self.type, variation=self.variation, content=items, distractors=distractors)
+            )
 
     def validate_categorize(data):
         errors = []

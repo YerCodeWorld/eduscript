@@ -58,7 +58,7 @@ class Metadata():
         try:
             return enum_cls(val.strip().lower()).value
         except ValueError:
-            print(f"Invalid enum value '{val}' for {enum_cls.__name__}")
+            self.logger.info(f"Invalid enum value '{val}' for {enum_cls.__name__}")
             return False
 
     @staticmethod

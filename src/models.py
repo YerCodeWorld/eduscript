@@ -15,6 +15,9 @@ class ParseResult:
         ]] = None
     errors: Optional[List[str]] = None
 
+class MultipleMetadata(BaseModel):
+    type: str
+    variation: str
 
 # Matching
 class Pair(BaseModel):
@@ -22,10 +25,11 @@ class Pair(BaseModel):
     right: str
 
 class MatchingContent(BaseModel):
+    type: Optional[str] = None
+    variation: Optional[str] = "original"
     pairs: List[Pair]
     distractors: Optional[List[str]] = None
     points: Optional[List[int]] = None
-
 
 # Blanks
 class Blank(BaseModel):
@@ -40,8 +44,9 @@ class BlanksContent(BaseModel):
     points: Optional[List[int]] = None
 
 class BlanksWrapper(BaseModel):
+    type: Optional[str] = None
+    variation: Optional[str] = "original"
     content: List[BlanksContent]
-
 
 # Ordering
 
@@ -52,6 +57,8 @@ class OrderingContent(BaseModel):
     points: Optional[List[int]] = []
 
 class OrderingWrapper(BaseModel):
+    type: Optional[str] = None
+    variation: Optional[str] = "original"
     content: List[OrderingContent]
 
 # Select
@@ -63,8 +70,9 @@ class SelectContent(BaseModel):
     points: Optional[List[int]] = []
 
 class SelectWrapper(BaseModel):
+    type: Optional[str] = None
+    variation: Optional[str] = "original"
     content: List[SelectContent]
-
 
 # MCQ
 
@@ -75,17 +83,46 @@ class MCQcontent(BaseModel):
     points: Optional[List[int]]
 
 class MCQwrapper(BaseModel):
+    type: Optional[str] = None
+    variation: Optional[str] = "original"
     content: List[MCQcontent]
 
 # Categorize
-
 class CategorizeContent(BaseModel):
     category: str
     items: List[str]
     points: Optional[List[int]]
 
 class CategorizeWrapper(BaseModel):
-    categories: List[CategorizeContent]
+    type: Optional[str] = None
+    variation: Optional[str] = "original"
+    content: List[CategorizeContent]
     distractors: Optional[List[str]] = None
 
+# Exercise
+class MetadataBody(BaseModel):
+    type: str
+    variation: str
+    instructions: Optional[str] = "Complete the exercise"
+    category: Optional[str] = "General"
+    difficulty: Optional[str] = "Beginner"
+    style: Optional[str] = None
+    title: Optional[str] = "Exercise"
+    packageId: Optional[str] = None
+    variation: Optional[str] = "original"
+    is_published: Optional[bool] = False
 
+class ExerciseContent(BaseModel):
+    exercise: Union[
+            'BlanksWrapper',
+            'SelectWrapper',
+            'MCQwrapper',
+            'OrderingWrapper',
+            'CategorizeWrapper',
+            'MatchingContent'
+        ]
+
+class Exercise(BaseModel):
+    mode: str
+    metadata: MetadataBody
+    content: List[ExerciseContent]
