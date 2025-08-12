@@ -83,13 +83,13 @@ class Parser:
 
         # First confirm the whole code is valid
         if not block:
-            return ValueError
+            return ValueError("...")
 
         if not instance.validate_metadata_keys(block):
-            return ValueError
+            return ValueError("...")
 
         if not instance.validate_metadata_values(block):
-            return ValueError
+            return ValueError("...")
 
         # Then populate the attributes of the class
         instance.create_base_structure(block)
@@ -186,10 +186,11 @@ class Parser:
         # print(exercise.model_dump())
 
 exercise = """
+
 @MODE=multiple
 
 @metadata {
-  type = ordering;
+  type = mcq;
   title = The best time of my life;
   instructions = Do not die please;
   difficulty=BEGINNER;
