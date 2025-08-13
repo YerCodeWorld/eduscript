@@ -1,0 +1,755 @@
+
+
+EXAMPLE USAGE with Categorize type
+
+---------------------------------------
+// DLS - Categorize type
+
+@metadata {
+    type = "categorize";
+    title = "Musical Instruments - Corner Selection";
+    instructions = "Click the correct corner for each instrument";
+    variation = "colors";
+    style = "school";
+}
+
+@define {
+    s = "guitar, violin, cello, harp";
+    p = "drums, tambourine, xylophone, cymbals";
+    w = "flute, trumpet, saxophone, clarinet";
+    k = "piano, organ, synthesizer, accordion";
+    n = "Synthesizer, drum machine, beatbox"  // for extra answers
+}
+
+@content {
+    STRINGS    = @fill(s, 2);
+    PERCUSSION = @fill(p, 2);
+    WIND       = @fill(w, 2);
+    KEYBOARD   = @fill(k, 2);
+    =  @fill (n, 2);
+}
+
+
+GENERATED JSON ->
+
+{
+    "type": "categorize",
+    "variation": "colors",
+    "instruction": "Click the correct category for each instrument",
+    "isDynamic": true,
+    "content": [
+        {
+            "name": "STRINGS",
+            "items": [
+                "guitar", "cello"
+            ]
+        },
+        {
+            "name": "PERCUSSION",
+            "items": [
+                "drums", "cymbals"
+            ]
+        },
+        {
+            "name": "WIND",
+            "items": [
+                "flute", "saxophone"
+            ]
+        },
+        {
+            "name": "KEYBOARD",
+            "items": [
+                "piano", "according"
+            ]
+        }
+    ],
+    "customLibraries": [
+        {
+            "name": "s",
+            "items": ["guitar, violin, cello, harp"]
+        },
+        {
+            "name" "p",
+            "items": ["drums, tambourine, xylophone, cymbals"]
+        },
+        {
+            "name": "w",
+            "items": ["flute, trumpet, saxophone, clarinet"]
+        },
+        {
+            "name": "k",
+            "items": ["piano, organ, synthesizer, accordion"]
+        }
+    ],
+    "variables": [],
+    "extraAnswers": [
+        "beatBox", "synthesizer"
+    ]
+}
+
+---------------------------------------
+
+// DSL - Catogorize Type
+
+
+@metadata {
+    type = "categorize",
+    instructions = "True or False",
+    variation = "corners",
+    style = nature
+}
+
+@content {
+    TRUE = The sun is white | Drinking 8 glasses of hours a day is good |
+    Sleeping 8 hours a day is good;
+
+    NEUTRAL = Love is good | Bad acts are subjective |
+    Arianna Grande is beautiful;
+
+    UNDETERMINED = The universe will never die;
+
+    FALSE = There's nothing wrong with envy | Smoking a lot is not that unhealthy |
+    Most people have good hearts;
+}
+
+
+GENERATED JSON ->
+
+{
+    "type": "categorize",
+    "variation": "corners",
+    "instruction": "Click the correct category for each instrument",
+    "isDynamic": false,
+    "content": [
+        {
+            "name": "TRUE",
+            "items": [
+                "The sun is white",
+                "Drinking 8 glasses of hours a day is good",
+                "Sleeping 8 hours a day is good"
+            ]
+        },
+        {
+            "name": "NEUTRAL",
+            "items": [
+                "Love is good",
+                "Bad acts are subjective",
+                "Arianna Grande is beautiful"
+            ]
+        },
+        {
+            "name": "UNDETERMINED",
+            "items": [
+                "The universe will never die"
+            ]
+        },
+        {
+            "name": "FALSE",
+            "items": [
+                "There's nothing wrong with envy",
+                "Smoking a lot is not that unhealthy",
+                "Most people have good hearts"
+            ]
+        }
+    ],
+    "customLibraries": [],
+    "variables": [],
+    "extraAnswers": []
+}
+
+
+
+
+EXAMPLE USAGE with multiple choice
+
+---------------------------------------
+
+// DSL - Multiple Choice
+
+
+@metadata {
+    type  = mcq,
+    title = "Life's decision making: Politically Correct Version"
+}
+
+@content {
+    // # as sentence/instruction holder
+
+    # You lie about your friend to other people and they find out. What is the right thing to do?
+    Deny all accusations | Admit it and show no remorse (pride) | [Apologize Sincerely] | Fault them for it;
+
+    # Your girlfriend still doesn't trust you after a year of you cheating to her
+    Break up with her | Argue with her about that making no sense | Accuse her of stubborn for not changing |
+    [Be patient and keep working on the relationship];
+
+    # You owe RD$18 000 to the bank. You have 21 000 as savings. What do you do?
+    ...;
+}
+
+
+GENERATED JSON ->
+
+{
+    "type": "MCQ",
+    "variation": "",
+    "instruction": "",
+    "isDynamic": false,
+    "content": [
+        {
+            "sentence": "You lie about your friend to other people and they find out. What is the right thing to do?",
+            "options": [
+                "Deny all accusations",
+                "Admit it and show no remorse (pride)",
+                "Fault them for it"
+            ],
+            "correctAnswers": ["Apologize Sincerely"],
+            "image": ""
+        },
+        {
+            "sentence": "Your girlfriend still doesn't trust you after a year of you cheating to her",
+            "options": [
+                "Break up with her",
+                "Argue with her about that making no sense",
+                "Accuse her of stubborn for not changing"
+            ],
+            "correctAnswers": ["Be patient and keep working on the relationship"],
+            "image": ""
+        },
+        {
+            "sentence": "What is the capital of France?",
+            "options": ["New York", "Tokyo", "Santo Domingo", "France"],
+            "correctAnswers": [4],
+            "image": ""
+        },
+
+    ],
+    "customLibraries": [],
+    "variables": [],
+    "extraAnswers": []
+}
+
+// DSL - Ordering
+
+
+@metadata {
+    type = ordering,
+    variation = single
+}
+
+@vars {
+    places = @ref(city_places, 2)
+}
+
+@content {
+
+    # In this place you go to eat with you family
+    R | e | s | t | a | u | r | a | n | t
+
+    # In this place you can watch games from different sports
+    S | t | a | d | i | u | m
+
+    # Here you go to do exercise
+    G | Y | M
+
+    # Here adults go to study
+    U | n | i | v | e | r | s | i | t | y
+
+    // ends up with three no-instructed words
+    @var(places)
+
+}
+
+
+
+GENERATED JSON ->
+
+{
+    "type": "ordering",
+    "variation": "single",
+    "instruction": "",
+    "isDynamic": true,
+    "content": [
+        {
+            "items": ["R", "e", "s", "t", "a", "u", "r", "a", "n", "t"],
+            "instruction": "In this place you go to eat with you family",
+            "image": "..."
+        },
+        {
+            "items": ["S", "t", "a", "d", "i", "u", "m"],
+            "instruction": "In this place you can watch games from different sports",
+            "image": "..."
+        },
+        {
+            "items": ["G", "Y", "M"],
+            "instruction": "Here you go to do exercise",
+            "image": "..."
+        },
+        {
+            "items": ["U", "n", "i", "v", "e", "r", "s", "i", "t", "y"],
+            "instruction": "Here adults go to study",
+            "image": "..."
+        },
+        {
+
+            "items": ["@var(places)"],
+            "instruction": "",
+            "image": "..."
+        },
+        {
+
+            "items": ["@var(places)"],
+            "instruction": "",
+            "image": "..."
+        }
+
+    ],
+    "customLibraries": [],
+    "variables": [
+        {
+            "name": "places",
+            "type": "ref"
+            "listName": "city_places",
+            "fetchLink": "autoGenerated",
+            "amount": 2
+        }
+    ],
+    "extraAnswers": []
+}
+
+// DSL - Matching
+
+
+
+@metadata {
+    type = "matching",
+    title = match things with their colors,
+    variation = original
+}
+
+// only good for simple, short exercises with short words
+@content {
+
+    apple  = red
+    sky    = blue
+    plants = green
+    sun    = yellow
+    clouds = white
+    = black
+
+}
+
+GENERATED JSON ->
+
+
+{
+    "type": "matching",
+    "variation": "original",
+    "instruction": "",
+    "isDynamic": false,
+    "content": [
+        {
+            "left": "apple",
+            "right": "red"
+        },
+        {
+            "left": "sky",
+            "right": "blue"
+        }
+        {
+            "left": "plants",
+            "right": "green"
+        },
+        {
+            "left": "sun",
+            "right": "yellow"
+        },
+        {
+            "left": "clouds",
+            "right": "white"
+        }
+
+    ],
+    "customLibraries": [],
+    "variables": [],
+    "extraAnswers": [
+        "black"
+    ]
+}
+
+
+// DSL - BLANKS
+
+@metadata {
+    type = fill blanks;
+    title = Countries Knowledge Challenge!;
+    instruction = Beat the game!;
+    variation = moving;
+}
+
+@content {
+
+    # Largest Country in the world
+    R*ussia*;
+
+    # Famous dish from Italy
+    *Pasta|Pizza*;
+
+    In Brazil, people speak *Chinese|[Portuguese]|Spanish*;
+
+    # Complete the name:
+    Dominican R*epublic*;
+
+    *[Mexican]|Chinese|Spanish* people like tacos a lot!;
+
+    The Amazon rainforest is in *North America|[South America]|Africa*;
+
+    The continent the Sahara desert is located in is *Africa*;
+
+    # Anime comes from
+    *J*a*pan*;
+}
+
+GENERATED JSON ->
+
+{
+    "type": "blanks",
+    "variation": "moving",
+    "instruction": "Beat the game!",
+    "isDynamic": false,
+    "content": [
+        {
+            "type": "single",
+            "sentence": "Russia",
+            "blanks": [1, 2, 3, 4, 5],
+            "instruction": "Largest Country in the world",
+            "image": ""
+        },
+        {
+            "type": "og",
+            "sentence": "_____",
+            "blanks": [
+                {
+                    "number": 1,
+                    "items": ["pasta", "pizza"]
+                }
+            ]
+            "instruction": "Famous dish from Italy",
+            "image": ""
+        },
+        {
+            "type": "mcq",
+            "sentence": "In Brazil, people speak _____",
+            "blanks": [
+                {
+                    "number": 1,
+                    "items": ["Chinese", "Spanish"],
+                    "correctItems": ["Portuguese"]
+                }
+            ],
+            "instruction": "",
+            "image": ""
+        },
+        {
+            "type": "single",
+            "sentence": "Dominican Republic",
+            "blanks": [12, 13, 14, 15, 16, 17, 18],
+            "instruction": "Complete the name:",
+            "image": ""
+        },
+        {
+            "type": "mcq",
+            "sentence": "___ people like tacos a lot!",
+            "blanks": [
+                {
+                    "number": 1,
+                    "items": ["Chinese", "Spanish"],
+                    "correctItems": ["Mexican"]
+                }
+            ],
+            "instruction": "",
+            "image": ""
+        },
+        {
+            "type": "mcq",
+            "sentence": "The Amazon rainforest is in ____",
+            "blanks": [
+                {
+                    "number": 1,
+                    "items": ["North America", "Africa"],
+                    "correctItems": ["South America"]
+                }
+            ],
+            "instruction": "",
+            "image": ""
+        },
+        {
+            "type": "og",
+            "sentence": "The continent the Sahara desert is located in is ___",
+            "blanks": [
+                {
+                    "number": 1,
+                    "items": ["Africa"]
+                }
+            ]
+            "instruction": "",
+            "image": ""
+        },
+        {
+            "type": "single",
+            "sentence": "Japan",
+            "blanks": [1, 2, 3, 4],
+            "instruction": "Anime comes from: ",
+            "image": ""
+        }
+    ],
+    "customLibraries": [],
+    "variables": [],
+    "extraAnswers": []
+}
+
+
+ATTACHED, different blanks logic depending on variation
+
+// og - fully blank words with possible answers
+// spots "___" and numbers them. Assigns possible correct answers.
+{
+    "type": "og",
+    "sentence": "",
+    "blanks": [
+        {
+            "number": "",
+            "items": ["", ""]
+        },
+        {
+            "number": "",
+            "items": ["", ""]
+        }
+    ],
+    "instruction": "",
+    "image": ""
+}
+
+// single - blanked letters
+// Using the blanks indeces list, blank the corresponding letters
+{
+    "type": "single",
+    "sentence": ["Music Store"],
+    "blanks": [2, 3, 4, 9, 10],
+    "instruction": "",
+    "image": ""
+}
+
+// mcq - multiple choice in each blank
+// a select appears on each "blank", instead. User 'items' for distractors
+{
+    "type": "mcq",
+    "sentence": "",
+    "blanks": [
+        {
+            "number": "",
+            "items": ["", ""],
+            "correctItems": [""]
+        }
+    ]
+    "instruction": "",
+    "image": ""
+}
+
+
+-------------------------------------------
+
+// DSL - bamboozle and Exams
+
+{
+
+    @metadata (type="bamboozle", difficulty="intermediate", instructions="...", title="general culture boom", image="...");
+
+    // @define | @vars go here
+
+    // If no instructions provided, look for "#" instructions or return none
+    @content (
+        type="fill blanks" variation="original",
+        instructions="Use the verb to be or an article",
+        points="5 10 15"
+    ) {
+
+        I *am|'m* Yahir;
+        She *is|'s* my sister;
+        We're *a* family;
+
+    }
+
+    @content (type="MCQ", points="10 15 15") {
+
+        # What is the capital of France?
+        New York | Santo Domingo | [Paris] | Tokyo;
+
+        # What is the nationality for someone from the UK?
+        American | Colombian | [british,scottish] | Asian;
+
+        # In an approximate, how many countries are in the world?
+        50 | 100 | [185] | 229;
+
+    }
+
+    @content (
+        type="ordering",
+        variation="single",
+        points="5 5 5"
+    ) {
+
+        // points go in order to the content i[n] -> content[n]
+
+        # Your brothers and sisters and aunties...
+        R | e | l | a | t | i | v | e | s;
+
+        S | t | a | d | i | u | m;
+
+        # You go here to study
+        S | c | h | o | o | l;
+    }
+
+    // possibility
+    // @fetch(exerciseId=06b8d2cb-dd56-4bd1-ba5d-c394125e960d, points="5*")
+}
+
+GENERATED JSON ->
+
+{
+    "type": "bamboozle",
+    "variation": "original",
+    "isDynamic": false,
+    "content": [
+        {
+            "type": "blanks",
+            "variation": "original",
+            "instruction": "Use the verb to be or an article",
+            "content": [
+                {
+                    "points": 5,
+                    "type": "og",
+                    "sentence": "I __ Yahir",
+                    "blanks": [
+                        {
+                            "number": 1,
+                            "items": ["am", "'m"]
+                        }
+                    ],
+                    "instruction": "",
+                    "image": ""
+                },
+                {
+                    "points": 10,
+                    "type": "og",
+                    "sentence": "She __ my sister",
+                    "blanks": [
+                        {
+                            "number": 1,
+                            "items": ["is", "'s"]
+                        }
+                    ],
+                    "instruction": "",
+                    "image": ""
+                },
+                {
+                    "points": 5,
+                    "type": "og",
+                    "sentence": "We're _ family;",
+                    "blanks": [
+                      {
+                        "number": 1,
+                        "items": "a"
+                      }
+                    ],
+                    "instructions": "",
+                    "image": ""
+                },
+
+            ],
+            "customLibraries": [],
+            "variables": [],
+            "extraAnswers": []
+        },
+        {
+            "type": "mcq",
+            "variation": "",
+            "instruction": "",
+            "content": [
+                {
+                    "points": 10,
+                    "sentence": "What is the capital of France?",
+                    "options": [
+                        "New York",
+                        "Santo Domingo",
+                        "Tokyo"
+                    ],
+                    "correctAnswers": ["Paris"],
+                    "image": ""
+                },
+                {
+                    "points": 15,
+                    "sentence": "What is the nationality for someone from the UK?",
+                    "options": [
+                        "American",
+                        "Colombian ",
+                        "Asian"
+                    ],
+                    "correctAnswers": ["british", "scottish"],
+                    "image": ""
+                },
+                {
+                    "points": 15,
+                    "sentence": "In an approximate, how many countries are in the world?",
+                    "options": [
+                        "50",
+                        "100",
+                        "229"
+                    ],
+                    "correctAnswers": ["185"],
+                    "image": ""
+                },
+            ]
+            "customLibraries": [],
+            "variables": [],
+            "extraAnswers": []
+        },
+        {
+            "type": "ordering",
+            "variation": "",
+            "instruction": "",
+            "content": [
+                {
+                    "points": 5,
+                    "items": ["R", "e", "l", "a", "t", "i", "v", "e", "s"],
+                    "instruction": "Your brothers and sisters and aunties...",
+                    "image": "..."
+                },
+                {
+                    "points": 5,
+                    "items": ["S", "t", "a", "d", "i", "u", "m"],
+                    "instruction": "",
+                    "image": "..."
+                },
+                {
+                    "points": 5,
+                    "items": ["S", "c", "h", "o", "o", "l"],
+                    "instruction": "You go here to study",
+                    "image": "..."
+                }
+            ],
+            "customLibraries": [],
+            "variables": [],
+            "extraAnswers": []
+        }
+    ]
+}
+
+
+
+
+
+
+
+
+
+

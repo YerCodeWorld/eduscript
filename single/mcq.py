@@ -1,19 +1,26 @@
 import re
 from typing import List, Optional
-from single.helpers import extract_instructions, parse_mcq_pattern
-
+from single.helpers import *
+from core.registry import register_type
 from src.models import ParseResult, MCQcontent, MCQwrapper
 
+@register_type("mcq")
 class MCQ:
 
     def __init__(self, exercise):
 
-        self.data = exercise
+        self.exercise = exercise
+        self.type: str = None
+        self.variation: str = None
+
+        # This
         self.errors = {
             "missing_correct": "No correct answers found for {0} - {1} Invalid sentence sequence. ",
             "empty_sentence": "Empty sentence found. Did you create a sentence with correct answers [...] only?"
         }
 
+    def initial_load(self):
+         self.type, self.varation = load_metadata(self.exercise).data
 
     def parse_content(self) -> ParseResult:
 
@@ -27,7 +34,7 @@ class MCQ:
 
 
         items: List[MCQcontent] =  []
-        chunks = [c.strip() for c in self.data.split(";")]
+        chunks = [c.strip() for c in self.exercise.split(";")]
 
         # Using enumerate this time
         for i, sn in enumerate(chunks):

@@ -1,0 +1,21 @@
+
+@metadata {
+  type = categorize;
+  title = something like this;
+  instructions = Do not die please;
+  difficulty=BEGINNER;
+  isPublished = true;
+  category = VOCABULARY;
+  style = nature;
+}
+
+@content {
+
+  <categorize, colors>
+
+  ANIMALS = Lion | Chicken | Tiger | Dog | Cat;
+  FRUITS = Banana | apple | Pear | Orage | Dragon Fruit;
+  COLORS = Blue | Red | White | Green | Black;
+  CLASSROOM = Pencil | Notebook | School Bag | Computer | Eraser;
+  @EXTRA=[beach|happyness]
+}

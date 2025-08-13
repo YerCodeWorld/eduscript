@@ -1,9 +1,10 @@
 import re
 from dataclasses import dataclass
 from logger_base import get_logger
-from typing import List, Optional
-from single.helpers import remove_distractors
+from typing import List
+from single.helpers import remove_distractors, load_metadata
 from src.models import ParseResult, Pair, MatchingContent
+from core.registry import register_type
 
 # Constraints
 """
@@ -27,24 +28,30 @@ Model
 # 1 - = or :: separate the left and right sides
 # 2 - empty left and line.startWith("=") indicates distractors (brackets, comma-separated)
 
+@register_type("matching")
 class Matching:
 
     def __init__(self, content: str):
 
-        self.content = content
+        self.exercise = content
+        self.type: str = None
+        self.variation: str = None
         self.logger = get_logger(self.__class__.__name__)
+
+    def initial_load(self):
+         self.type, self.varation = load_metadata(self.exercise).data
 
     def parse_content(self) -> ParseResult:
 
         # PATTERN FOR EXTRA: @EXTRA = [ value1 | value2 ]
-        result = remove_distractors(self.content)
+        result = remove_distractors(self.exercise)
         if not result.ok:
             return result.error
         distractors = result.data
-        self.content = result.result_string
+        self.exercise = result.result_string
 
         pairs: List[Pair] = []
-        chunks = [c.strip() for c in self.content.split(";") if c.strip()]
+        chunks = [c.strip() for c in self.exercise.split(";") if c.strip()]
 
         for sn in chunks:
 

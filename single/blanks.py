@@ -1,13 +1,21 @@
 import re
 from typing import List, Optional
 from pydantic import BaseModel
-from single.helpers import extract_instructions, parse_mcq_pattern
+from single.helpers import *
 from src.models import ParseResult, Blank, BlanksContent, BlanksWrapper
 
+from core.registry import register_type
+
+@register_type("blanks")
 class Blanks:
 
     def __init__(self, exercise):
         self.exercise = exercise
+        self.type: str = None
+        self.variation: str = None
+
+    def initial_load(self):
+         self.type, self.varation = load_metadata(self.exercise).data
 
     @staticmethod
     def parse_blanks_pattern(s):
@@ -43,7 +51,6 @@ class Blanks:
             pointer += 1
 
         return blanks
-
 
     def parse_content(self):
 
@@ -89,7 +96,7 @@ class Blanks:
                 r = parse_mcq_pattern(blank, True, True)
                 blanks.append(Blank(position = i+1, correct_options=r.data, options=r.result_string))
 
-            # The 'ch' reassignments in fro loop above actually mutate it with each new blank.
+            # The 'ch' reassignments in the for loop above actually mutate it with each new blank.
             sentence = ch
             items.append(BlanksContent(sentence=sentence, blanks = blanks, instruction=ins))
 

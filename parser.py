@@ -1,33 +1,13 @@
 import re
 from metadata import Metadata
-from single.matching import Matching
-from single.ordering import Ordering
-from single.mcq import MCQ
-from single.categorize import Categorize
-from single.select import Select
-from single.blanks import Blanks
 from sample_data import *
-from typing import List, Optional, Union
 from enum import Enum
 from logger_base import get_logger
-
-from src.helpers import extract_type
+from core.loader import load_plugins
+from core.registry import get_handler
+from single.helpers import load_metadata
 from src.models import *
 from enums import ExerciseTypes
-
-# Process might look like this:
-
-"""
-1 - Check if MODE = dynamic
-2 - Call corresponding process stack
-
-If static
-
-3 - Parse Metadata
-4 - Based on info, use corresponding parser
-5 - Validate exercise
-6 - If no errors, return result model dump
-"""
 
 class Mode(Enum):
     SINGLE = "single"
@@ -36,12 +16,16 @@ class Mode(Enum):
 class Parser:
 
     def __init__(self, code):
+
+        # Initial string
         self.exercise = code
 
+        # Parsing Processes
         self.mode: Mode = Mode.SINGLE.value
         self.metadata: MetadataBody = None
         self.content: List[ExerciseContent] = []
 
+        # Final object
         self.result: Exercise = None
 
         self.logger = get_logger(self.__class__.__name__)
@@ -53,14 +37,15 @@ class Parser:
 
         m = content_re.findall(s)
         if not m:
-            return ValueError("Couldn't extract any content bodies")
+            raise ValueError("Couldn't extract any content bodies")
 
         if not is_multiple and len(m) == 1:
             return [content_re.sub("", m[0])]
 
         if is_multiple and (len(m) > 1):
             return [content_re.sub("", match) for match in m]
-        return ValueError("No more than one content body found in multiple mode exercise")
+
+        raise ValueError("No more than one content body found in multiple mode exercise")
 
     def extract_mode(self) -> None:
         """
@@ -76,23 +61,29 @@ class Parser:
             self.mode = Mode.MULTIPLE.value
             # Remove from current string
             self.exercise = mode_re.sub("", self.exercise)
+        self.logger.info(f"MODE: {self.mode}")
 
     def parse_metadata(self) -> None:
-        instance: Metadata = Metadata(self.exercise)
-        block: str = instance.extract_metadata_blocks()
 
-        # First confirm the whole code is valid
-        if not block:
-            return ValueError("...")
+        instance = Metadata(self.exercise)
+        block: str = None
 
-        if not instance.validate_metadata_keys(block):
-            return ValueError("...")
+        try:
 
-        if not instance.validate_metadata_values(block):
-            return ValueError("...")
+            block = instance.get_metadata_block()
+            self.logger.info("Extracted metadata block succesfully.")
+
+            instance.validate_keys(block)
+            self.logger.info("Metadata keys have been correctly validated.")
+
+            instance.validate_values(block)
+            self.logger.info("Metadata values have been correctly validated.")
+
+        except ValueError as e:
+            raise ValueError(e)
 
         # Then populate the attributes of the class
-        instance.create_base_structure(block)
+        instance.populate_attr(block)
 
         # Finally let's create an object we can model_dump
         self.metadata = MetadataBody(
@@ -112,121 +103,53 @@ class Parser:
 
     def parse_content(self, exs: str):
         """
-        Utility function for parsing a single mode exercise.
-        Gets the type from metadata and invokes the proper class passing the exercise
-        attribute as an argument
+        Utility function for parsing a single exercise.
+        Gets the type either from metadata or by parsing <type, var> pattern in case we are inside multiple mode.
+        Based on type registry loads the corresponding class and parse methods are loaded.
         """
-        type_re = re.compile(r"\s*<([^>]+)>", re.DOTALL)
-
-        class_mapping = {
-            'blanks': Blanks,
-            'ordering': Ordering,
-            'mcq': MCQ,
-            'categorize': Categorize,
-            'select': Select,
-            'matching': Matching
-        }
 
         t: str = self.metadata.type
         v: str = self.metadata.variation
+        type_re = re.compile(r"\s*<([^>]+)>", re.DOTALL)
 
-        # didn't think about it... i needed to find out what the type was before instanciating the class...
-        # seems horrible specially after I called it again a bit below
-        # well idk, it works, let it there until you find something better. Why k tho?
-        k = extract_type(exs)
-        if not isinstance(k, ValueError):
-            t = k[0]
+        # ???
+        k = load_metadata(exs)
+        if k.ok:
+            t, v = k.data[0], k.data[1]
 
-        exs_class = class_mapping.get(t)
-        instance = exs_class(exs)
+        Handler = get_handler(t)
+        instance = Handler(exs)
 
         if self.mode == Mode.MULTIPLE.value:
-            r = instance.initial_load()
-            if isinstance(r, ValueError):
-                return r
+            instance.initial_load()
+            if instance.type == None or instance.variation == None:
+                raise ValueError("Multiple mode detected, but no metadata declaration in individual exercises")
             instance.exercise = type_re.sub("", instance.exercise)
 
-        result = instance.parse_content()
-
-        if not result.ok:
-            self.logger.error(result.errors)
-            return ValueError
-
-        self.logger.info(f"Exercise has been parsed")
-        self.content.append(ExerciseContent(exercise=result.content))
+        parse_r = instance.parse_content()
+        if not parse_r.ok:
+            raise ValueError(parse_r.errors)
+        self.content.append(ExerciseContent(exercise=parse_r.content))
 
     def run(self):
+        # Register classes
+        load_plugins()
 
+        # Populate mode variable
         self.extract_mode()
-        self.logger.info(f"MODE: {self.mode}")
 
-        metadata_r = self.parse_metadata()
-        if isinstance(metadata_r, ValueError):
-            self.logger.error(metadata_r)
-            return None
-        self.logger.info(self.metadata)
+        try:
 
-        content_r = self.extract_content(self.exercise, self.mode == Mode.MULTIPLE.value)
-        if isinstance(content_r, ValueError):
-            self.logger.error(content_r)
-            return None
-        self.logger.info(content_r)
+            metadata_r = self.parse_metadata()
+            print(metadata_r, type(metadata_r))
 
-        for exs in content_r:
-            self.parse_content(exs)
+            content_r = self.extract_content(self.exercise, self.mode == Mode.MULTIPLE.value)
+            for i, exs in enumerate(content_r):
+                self.parse_content(exs)
+                self.logger.info(f"{i+1} exercise(s) parsed succesfully.")
 
-        self.result = Exercise(mode=self.mode, metadata=self.metadata, content=self.content)
-        print(self.result.model_dump())
-        #if self.mode == Mode.MULTIPLE.value:
-        #    self.logger.warning("Exercise is multiple")
+        except ValueError as e:
+            raise ValueError(e)
 
-        # self.parse_content()
-
-        # exercise = Exercise(mode=self.mode, metadata=self.metadata, content=self.content)
-        # print(exercise.model_dump())
-
-exercise = """
-
-@MODE=multiple
-
-@metadata {
-  type = mcq;
-  title = The best time of my life;
-  instructions = Do not die please;
-  difficulty=BEGINNER;
-  isPublished = true;
-  category = VOCABULARY;
-  style = nature;
-}
-
-@content {
-    <ordering, original>
-
-    # Don't get distracted!
-    She  | takes | a   | shower | in | the | morning | [forgets] | [likes];
-    they | do    | the | homework;
-    I    | watch | [cooking] | tv | in | the| afternoon;
-    we   | go    |   to work | at |seven;
-
-    # Can you brush that!??
-    He   | brushes | his   | teeth | [bed] | with | colgate;
-
-    they | have    | lunch | together;
-}
-
-@content {
-
-<categorize, colors>
-
-ANIMALS = Lion | Chicken | Tiger | Dog | Cat;
-FRUITS = Banana | apple | Pear | Orage | Dragon Fruit;
-COLORS = Blue | Red | White | Green | Black;
-CLASSROOM = Pencil | Notebook | School Bag | Computer | Eraser;
-@EXTRA=[beach|happyness]
-}
-"""
-
-instance = Parser(exercise)
-result = instance.run()
-if not result:
-    print("...")
+        self.result = Exercise(mode=self.mode, metadata=self.metadata, exercises=self.content)
+        return self.result

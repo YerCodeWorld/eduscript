@@ -1,11 +1,13 @@
 import re
 from typing import List, Optional
 from sample_data import categorize_sample
-from single.helpers import remove_distractors
-from src.helpers import extract_type
+from single.helpers import remove_distractors, load_metadata
+
+from core.registry import register_type
 
 from src.models import ParseResult, CategorizeContent, CategorizeWrapper
 
+@register_type("categorize")
 class Categorize:
 
     def __init__(self, exercise):
@@ -15,12 +17,7 @@ class Categorize:
         self.variation = None
 
     def initial_load(self):
-
-        r = extract_type(self.exercise)
-        if isinstance(r, ValueError):
-            return ParseResult(ok=False, errors=[r])
-        self.type, self.variation = r[0].strip(), r[1].strip()
-        return ParseResult(ok=True)
+        self.type, self.variation = load_metadata(self.exercise).data
 
     def parse_content(self):
 

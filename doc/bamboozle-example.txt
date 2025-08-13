@@ -1,0 +1,118 @@
+// config.json
+
+{
+    "config": {
+        "teams": 3,
+        "powerups": true,
+        "timer": true,
+        "coloredGrid": true,
+        "challenges": true,
+        "gridSize": "16",
+        "hidePoints": false,
+        "randomSelect": true,
+        "editPoints": true,
+        "customPoints": true,
+        "passPointsTo": true,
+        "generalQuestions": true,
+        "losePoints": false
+    },
+
+    "powerups": {
+        "toFirst": true,
+        "toLast": true,
+        "stealFrom": true,
+        "stealX": true,
+        "doublePoints": true,
+        "plusX": true,
+        "minusX": true,
+        "swapPoints": true,
+        "resetScore": true,
+        "resentAllScores": true,
+        "noPoints": true
+    },
+
+    "timer": {
+        "10": "60",
+        "15": "90",
+        "20": "120",
+        "25": "150"
+    }
+}
+
+
+// dsl
+
+{
+    @requires ("eduscript", "2.0");
+
+    @metadata (type="bamboozle", difficulty="intermediate", instructions="...", title="general culture boom", image="...");
+
+    // @define | @vars go here
+
+    // If no instructions provided, look for "#" instructions or return none
+    @content (
+        type="fill blanks" variation="original",
+        instructions="Use the verb to be or article",
+        points="5 10 15"
+    ) {
+
+        I *am|'m* Yahir;
+        She *is|'s* my sister;
+        We're *a* family;
+
+    }
+
+    @content (type="MCQ", points="10 15 15") {
+
+        # What is the capital of Paris?
+        New York | Santo Domingo | [Paris] | Tokyo;
+
+        # What is the nationality for someone from the UK?
+        American | Colombian | [british,scottish] | Asian;
+
+        # In an approximate, how many countries are in the world?
+        50 | 100 | [185] | 229;
+
+    }
+
+    @content (
+        type="ordering",
+        variation="single",
+        points="5 5 5"
+    ) {
+
+        // points go in order to the content i[n] -> content[n]
+
+        # Your brothers and sisters and aunties...
+        R | e | l | a | t | i | v | e | s;
+
+        S | t | a | d | i | u | m;
+
+        # You go here to study
+        S | c | h | o | o | l;
+    }
+
+    @fetch(exerciseId=06b8d2cb-dd56-4bd1-ba5d-c394125e960d, points="5*")
+}
+
+
+---------------------
+
+Functions and Conditionals
+
+function generalQuestions() {
+    // add a button to display a question which anyone can answer and get the points
+}
+
+// timer
+if (config["config"]["timer"] === "true") {
+    timerIsVisible = true;
+}
+
+// coloredGrid
+if (config["config"]["timer"] === "true") {
+    // add logic to color the grid based on points
+}
+
+
+...

@@ -1,7 +1,9 @@
 import re
 from typing import List, Optional
-from single.helpers import extract_instructions
+from single.helpers import extract_instructions, load_metadata
 from src.models import ParseResult, SelectContent, SelectWrapper
+
+from core.registry import register_type
 
 # Parses something like this
 """
@@ -17,16 +19,25 @@ just a [smooth] step in the middle turned out
 to be [horrific].;
 """
 
+@register_type("select")
 class Select:
 
     def __init__(self, exercise):
 
-        self.data = exercise
+        self.exercise = exercise
+        self.type: str = None
+        self.variation: str = None
+
         self.pattern = re.compile(r"\[([a-zA-Z]+)\]")
+
+    def initial_load(self):
+         self.type, self.varation = load_metadata(self.exercise).data
 
     def parse_content(self):
 
-        chunks = [c.strip() for c in self.data.split(";")]
+        self.type, self.variation = load_metadata(self.exercise)
+
+        chunks = [c.strip() for c in self.exercise.split(";")]
         items: List[SelectContent] = []
 
         for p in chunks:

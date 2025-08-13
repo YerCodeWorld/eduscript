@@ -125,4 +125,4 @@ class ExerciseContent(BaseModel):
 class Exercise(BaseModel):
     mode: str
     metadata: MetadataBody
-    content: List[ExerciseContent]
+    exercises: List[ExerciseContent]

@@ -1,0 +1,246 @@
+EDUSCRIPT GRAMMAR
+
+
+// - comment
+
+@ symbol is used to call a function or use an existing data body
+
+All existing expressions as of now:
+
+@metadata
+@define
+@vars
+@var
+@content
+@ref
+@fill
+
+A normal exercise would just work with a @metadata + @content bodies.
+These calls might get parameters or a content body.
+
+() parameters holder for data return calls
+{} content holder for data bodies creators
+
+@metadata {}
+
+Expects key-value pairs. Full body:
+
+@metadata {
+    type = order;
+    variation = original;
+    instruction = don't do anything crazy;
+    difficulty = BEGGINER;
+    tags = ;
+}
+
+@vars {}
+
+Expects key-value pairs of custom keys and @ref/@fill calls
+
+@vars {
+    animals = @fill ('city_places', 3);
+    profession = @ref ('professions', 1, A1);
+    extreme_job = @ref ('extreme_jobs', 1);
+}
+
+@fill() | @ref()
+
+These are used inside a @vars {} body, they help provide fetching information.
+In this case, both functions accept the following parameters:
+
+- lib_name
+- word_amount
+- difficulty
+- tag
+- separator
+
+This information is set up in the generated JSON body, which a possible rendered
+can then create their fetching data logic. In this case, the site has a built-in
+JSON word lists system, and using this info we can fetch specific lists of words.
+
+This system will be deployed in an end-point so that urls can provide the data and
+implementing fetching logic does not involve downloading the libraries.
+
+The @fill() function inmediately fetches words when parsing the exercise the first
+time, meaning calls to these variables are substituted right away. The difference
+with the @ref() function is that the former does not fetch at first parse, but
+activates a isDynamic=true, indicating that the fetching logic will occur at render
+time, achiving to get different results each time, since the libraries return
+randomized values.
+
+These functions can also fetch values from custom libraries declared under a @define
+content holder, but just needing a name and amount since custom libraries do not
+support complex structures yet, just pure basic things.
+
+@define(
+    w = [machu pichu, the great wall of china, giza pyramids, hanging gardens of babylon],
+    mw =[...]
+)
+
+@ref(w, 3)
+
+
+@var(var_name)
+
+This is the function to call the declared variables in the @vars body, and the stored
+values in those variables is then placed in the location of this call.
+I have a proposal to use a shorter caller like @v:var_name. encouraging short variable
+names also.
+
+What's the difference between a () parameters holder and a {} content holder?
+
+() these are parameters holder as they do not create a data body, they just fetch
+data from somewhere else in a specified behavior. {} Do create a data bodies in the
+json, like "content": [], "variables": [], "customLibraries": [] (@define function), etc.
+
+Extra
+
+Not all exercise types accept multiple @content calls, individual types exercises might
+just get a single @content {}, with the corresponding data (like type or instructions)
+being taken from the @metadata body.
+
+Other types, like "mixed", "bamboozle", "exam", "..." DO ACCEPT more than one @content,
+as they all benefit from it. For these, the content body must be called using a () parameters
+holder to specify the metadata for each exericise.
+
+@metadata(...) // global exercise information
+
+@content (type=..., variation=..., instruction=..., points=...) {}
+
+@content (...) {}
+
+----------------------------------------------------------------------------------------
+
+GLOBAL PERSPECTIVE
+
+The outer JSON abstrabtion layer (EduScript "dsl") is just a set of content bodies as shown,
+and possible function calls. Now, when it comes to @content {}, the body inside of it uses
+different grammars based on the type. Each type has a, thought simple, specific grammar to parse.
+
+Global Indicators
+
+# - used for instructions
+<...> - possible image Indicator
+; - sentence/content separator
+
+MCQ
+
+|  - Options separator
+[] - correct options indicator
+,  - to separate multiple correct options [...,...]
+
+Example
+
+# Question/sentence/instruction...
+option1 | option2 | option3 | [correct1, correct2]
+
+BLANKS
+
+** - Blanks indicator
+|  - Multiple correct options separator for a blank
+[] - correct options indicator for multiple options blanks
+,  - Separator for multiple correct options
+
+Example
+
+I *am|'m* Yahir                          // original
+R*es*taur*ant*                           // single
+We *[paint,color]|sleep|eat* drawings    // mcq variation
+
+Parser must use pointer algorithm.
+
+MATCHING
+
+= - sides separator
+
+Example
+
+left1 = right1
+left2 = right2
+= right      // extra asnwer
+
+ORDERING
+
+|  - Values separator
+[] - Extra words, distrators
+
+Example
+
+I | am | not | with | you | [sleep]
+
+CATEGORIZE
+
+= - Category-Value separator
+| - Values separator
+
+Example
+
+category1 = value1 | value2 | value3
+category2 = value1 | value2
+= value1 | value2  // extra values
+
+SELECTOR
+
+[] - Selections
+int: - Used inside [] to create types of selections
+
+Example
+
+# Select All Adjectives
+I am a [beautiful] person, with a [extrovert] and [funny] personality.
+
+OR
+
+# Select good (blue) and bad (red) adjectives
+
+This movie is so [1: boring!], I can't image a [1:worse] plot than this.
+Compared to the [2:beautiful] one we watched yesterday, this is [1:horrible]!
+I need a marathon of three [2:good] watches after this...
+
+-----------------------------------------------------------------------
+
+Grammar function
+
+For convenient usage inside future complex exercise types (like reading),
+I consider the usage of grammar functions, which based on type accept the grammar
+of that specific type. A renderer should then figure out how to display inside
+whatever context.
+
+@mcq(
+    question=option|option|[correctOption];
+    ...=...
+)
+
+@blank(...=I *don't|do not* like you!)
+
+@select(...=We [play] and [sing] together everyday)
+
+@order(...=I | do | not | understand)
+
+@match(
+    ... = ...;
+    ... = ...;
+    ... = ...;
+)
+@categorize(...)
+
+These are supposed to be lighter helpers, not needing any metadata or full fetching logic.
+They could be helper modals for a reading exercise (even in-content exercise), and many more
+ideas.
+
+Possible Example Sketch
+
+@metadata(type=reading; ...)
+
+@content {
+
+    Various lists of the Wonders of the World have been compiled from antiquity to the present day,
+    in order to catalogue the world's most spectacular natural features and human-built structures.
+
+    @mcq(How many lists of Wonders of the World have been compiled? = 7 | 2 | undetermined | [some])
+
+    ...
+
+}
+
+Although this needs more polish for possible renderers.

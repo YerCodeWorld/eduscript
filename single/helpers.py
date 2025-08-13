@@ -2,6 +2,8 @@
 import re
 from typing import List, Optional
 from dataclasses import dataclass
+from metadata import Metadata
+from enums import ExerciseTypes
 
 @dataclass
 class FunctionResult:
@@ -11,6 +13,10 @@ class FunctionResult:
     errors: Optional[List[str]] = None
 
 def remove_distractors(s) -> FunctionResult:
+    """
+    Extra feature for #categorize and #matching exercises to add distractors.
+    @EXTRA = [value | value | value]
+    """
 
     distractors_re = re.compile(r"@EXTRA\s*=\s*\[(.*?)\]")
 
@@ -86,3 +92,35 @@ def parse_mcq_pattern(s: str, skip_brackets=False, skip_pipes=False) -> Function
 
     # print(correct_options, options)
     return FunctionResult(ok=True, data=correct_options, result_string=options)
+
+def load_metadata(exs: str):
+
+    def get_metadata(exs: str) -> list[str]:
+        # Syntax: <type, variation>
+        type_re = re.compile(r"\s*<([^>]+)>", re.DOTALL)
+
+        m = type_re.search(exs)
+        if not m:
+            raise ValueError("No metadata declaration inside of exercise on multiple mode")
+
+        if "," not in m.group(1) or len(m.group(1).split(",")) != 2:
+            raise ValueError("Incorrect syntax inside metadata declaration")
+
+        exs_type, variation = m.group(1).split(",")
+
+        exs_type = Metadata.canonical_enum(ExerciseTypes, exs_type)
+        if not exs_type:
+            raise ValueError("Invalid exercise type found on metadata declaration")
+
+        if not variation.strip():
+            raise ValueError("Variation information seems to be empty")
+
+        return [exs_type, variation]
+
+    try:
+        r = get_metadata(exs)
+        return FunctionResult(ok=True, data=r)
+
+    except ValueError as e:
+        # None None ugly hack, but I guess it works fine
+        return FunctionResult(ok=False, data=[None, None], errors=[e])

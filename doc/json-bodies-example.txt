@@ -1,0 +1,295 @@
+-----------------------------------------------
+
+type exerciseTypes = 'MCQ' | 'select' | 'blank' | 'order' | 'categorize' | 'match';
+type exerciseVariationTYpe<exerciseTypes, string> = {};
+
+-----------------------------------------------
+
+// Main JSON Body
+
+{
+    "type": "exerciseType",
+    "variation": "exerciseVariationType",
+    "content": [
+        {},
+        {}
+    ],
+    "customLibraries": [
+        {
+            "name": "...",
+            "items": "..."
+        }
+    ],
+    "variables": [
+        {
+            "name": "extreme_profession",
+            "type": "ref/fill"
+            "listName": "extre_jobs",
+            "fetchLink": "...",
+            "amount": 3
+        }
+    ]
+    "extraAnswers": ["", ""]
+}
+
+->
+
+interface MainJsonBody {
+    type: ExerciseType;
+    variation: ExerciseVariationType;
+    content: any;
+    customLibraries: Array<{
+        name: string;
+        items: string[];
+    }>;
+    variables: Array<{
+        name: string;
+        listName: string;
+        amount: string;
+        tag?: string;
+        level?: string;
+    }>;
+    extraAnswers: string[];
+}
+
+// blanks
+
+{
+    "type": "blanks",
+    "variation": "original",
+    "content": [
+        {
+            "sentence": "I __ Yahir. She __ Yuleisi.",
+            "blanks": [
+                {
+                    "number": 1,
+                    "items": ["am", "'m"]
+                },
+                {
+                    "number": 2,
+                    "items": ["is", "'s", "is not", "isn't"]
+                }
+            ],
+            "instruction": "",
+            "image": ""
+        },
+        {}
+    ],
+    "extraAnswers": ["", ""]
+}
+
+->
+
+interface BlanksJsonBody {
+    type: ExerciseType;
+    variation?: ExerciseVariationType;
+    content: Array<{
+        sentence: string;
+        blanks: Array<{
+            index: string;
+            items: string[];
+        }>
+        instruction: string;
+        image: string;
+    }>,
+    extraAnswers?: string;
+}
+
+// ordering
+
+{
+    "type": "order",
+    "variation?": "single",
+    "content": [
+        {
+            "items": ["I", "am", "Yahir"],
+            "instruction": "...",
+            "image": "..."
+        },
+        {}
+    ],
+    "extraAnswers?": ["", ""]
+}
+
+->
+
+interface OrderingJsonBody {
+    type: ExerciseType;
+    variation?: ExerciseVariationType;
+    content: Array<{
+        items: string[],
+        instruction?: string,
+        image?: string,
+    }>;
+    extraAnswers?: string;
+}
+
+// MCQ
+
+
+{
+    "type": "MCQ",
+    "variation": "",
+    "content": [
+        {
+            "sentence": "What is the capital of France?",
+            "options": ["New York", "Tokyo", "Santo Domingo", "France"],
+            "correctAnswers": [4],
+            "image": ""
+        },
+        {}
+    ],
+    "extraAnswers": [""]
+}
+
+->
+
+interface MultipleChoiceJsonBody {
+
+    type: ExerciseType;
+    variation: ExerciseVariationType;
+    content: Array<{
+        sentence: string;
+        options: string[];
+        correctAnswers: number[];
+        image?: string
+    }>;
+    extraAnswers: string[];
+
+}
+
+// Categorize
+
+
+{
+    "type": "exerciseType",
+    "variation": "exerciseVariationType",
+    "content": [
+        {
+            "category": "Countries",
+            "items": ["DR", "USA", "UK", "AUS"],
+            "image": ""
+        },
+        {}
+    ],
+    "extraAnswers": ["", ""]
+}
+
+->
+
+interface CategorizeJsonBody {
+    type: ExerciseType;
+    variation?: ExerciseVariationType;
+    content: Array<{
+        category: string;
+        items: string[];
+        image: string;
+    }>;
+    extraAnswers?: string;
+}
+
+// Match
+
+{
+    "type": "match",
+    "variation": "origial",
+    "content": [
+        {
+            "left": "apple",
+            "right": "red"
+        },
+        {}
+    ],
+    "extraAnswers": ["black", "white"]
+}
+
+->
+
+interface MatchJsonBody {
+    type: ExerciseType;
+    variation: ExerciseVariationType;
+    content: Array<{
+        left: string;
+        right: string;
+    }>;
+    extraAnswers?: string;
+}
+
+// Select
+
+{
+    "type": "select",
+    "variation": "original",
+    "content": [
+        {
+            "text": "...",
+            "correctSelections": [3, 5, 12],
+            "instruction": "...",
+            "image": "..."
+        },
+        {}
+    ],
+    "extraAnswers": ["", ""]
+}
+
+->
+
+interface SelectJsonBody {
+    type: ExerciseType;
+    variation: ExerciseVariationType;
+    content: Array<{
+        text: string;
+        correctSelections: number[];
+        instruction: string;
+        image?: string;
+    }>;
+    extraAnswers?: string;
+}
+
+// Bamboozle and Exams
+
+
+{
+    "type": "ExerciseType",
+    "variation": "ExerciseVariationType",
+    "content": [
+        {
+            "type": "...",
+            "variation": "...",
+            "instruction": "...",
+            "content": [
+                {
+                    "points": ["", ""],
+                    "category": "Countries",
+                    "items": ["DR", "USA", "UK", "AUS"],
+                    "image": ""
+                },
+                {
+                    "points": ["", ""],
+                    "category": "Countries",
+                    "items": ["Spain", "Mexico", "Colombia", "Cuba"],
+                    "image": ""
+                }
+            ],
+            "extraAnswers": ["", ""]
+        },
+        {}
+    ]
+}
+
+->
+
+interface MultipleJsonBody {
+    type: ExerciseType;
+    variation: ExerciseVariationType;
+    content: Array<{
+        type: ExerciseType;
+        variation: ExerciseVariationType;
+        instruction: string;
+        content: Array<{
+            points: number[];
+            content: any;
+        }>;
+        extraAnswers: string[];
+    }>;
+}

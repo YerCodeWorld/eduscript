@@ -20,6 +20,8 @@ class Metadata():
         self.variation = "original"
         self.is_published = False
 
+        self.metadata_re = re.compile(r"@metadata\s*.*?{(.*?)}", re.DOTALL)
+
         self.enums = {
             "type": ExerciseTypes,
             "category": ExerciseCategory,
@@ -35,7 +37,6 @@ class Metadata():
             "variation": MaxValuesLength.VARIATION.value,
             "packageId": MaxValuesLength.PACKAGEID.value
         }
-
 
     @staticmethod
     def extract_key_val(pair_str: str) -> tuple[str, str]:
@@ -57,109 +58,81 @@ class Metadata():
         """
         try:
             return enum_cls(val.strip().lower()).value
-        except ValueError:
-            self.logger.info(f"Invalid enum value '{val}' for {enum_cls.__name__}")
-            return False
+        except ValueError as e:
+            raise ValueError(f"Invalid enum value '{val}' for {enum_cls.__name__}")
 
-    @staticmethod
-    def remove_metadata_block(s):
-        metadata_reg = re.compile(r"@metadata\s*.*?{(.*?)}", re.DOTALL)
-        return metadata_reg.sub("", s)
+    def remove_metadata_block(self, s):
+        return self.metadata_re.sub("", s)
 
-    def extract_metadata_blocks(self):
-        found = re.findall(r"@metadata\s*.*?{(.*?)}", self.data, re.DOTALL)
+    def get_metadata_block(self):
+        m = re.findall(self.metadata_re, self.data)
 
-        if not found:
-            self.logger.error("No @metadata block found.")
-            return None
+        if not m:
+            raise ValueError("No @metadata block found.")
 
-        if len(found) > 1:
-            self.logger.error("More than one metadata block found. Just one allowed")
-            return None
+        if len(m) > 1:
+            raise ValueError("More than one metadata block found. Just one allowed")
 
-        fields = [f.strip() for f in found[0].split(";")]
+        return [field.strip() for field in m[0].split(";") if '=' in field and field.strip()]
 
-        # remove any extra empty or non-valid value
-        filtered = []
-        for f in fields:
-            if '=' in f and f.strip():
-                filtered.append(f)
-            else:
-                self.logger.warning(f"Found empty or uncomplete metadata field: {f}")
+    def validate_keys(self, fields: list[str]) -> None:
 
-        self.logger.info("Extracted metadata block succesfully")
-        return filtered
-
-    def validate_metadata_keys(self, fields):
         valid_keys = {e.value for e in ValidMetadataBlock}
         required   = {e.value for e in RequiredMetadataInfo}
+
         seen = set()
 
-        for field in fields:
+        for f in fields:
             # we understand this symbol is present in the string, as we cleaned off those that didn't
-            key, _ = self.extract_key_val(field);
+            key, _ = self.extract_key_val(f);
             key = key.strip()
 
             if key not in valid_keys:
-                self.logger.error(f"Key '{key}' is not a valid metadata field")
-                return False
+                raise ValueError(f"Key '{key}' is not a valid metadata field")
 
             if key in seen:
                 self.logger.warning(f"Duplicate key '{key}' – last value will be used.")
+
             seen.add(key)
 
         missing = required - seen
         if missing:
-            self.logger.error("Missing required fields in the metadata block")
-            return False
+            raise ValueError("Missing required fields in the metadata block")
 
-        self.logger.info("Validated all metadata keys!")
-        return True
+    def validate_values(self, fields: list[str]) -> None:
 
-    def validate_metadata_values(self, fields):
+        for f in fields:
 
-        for field in fields:
-            key, val = self.extract_key_val(field);
-            key = key.strip()
-            val = val.strip()
+            key, val = self.extract_key_val(f);
+            key, val = key.strip(), val.strip()
 
             if key == "isPublished":
                 continue
 
             if key in self.enums:
-                val = self.canonical_enum(self.enums[key], val)
-                if not val:
-                    return False
+                try:
+                    self.canonical_enum(self.enums[key], val)
+                except ValueError as e:
+                    return e
 
             # enforce max length for free-text fields
             if key in self.max_length and len(val) > self.max_length[key]:
                 v = self.strip_quotes(val)
+
                 if len(v) > self.max_length[key]:
-                    self.logger.error(f"Value too long for '{key}' ({len(v)} > {self.max_length[key]})")
-                    return False
+                    raise ValueError(f"Value too long for '{key}' ({len(v)} > {self.max_length[key]})")
 
-        self.logger.info("All values have been validated!")
-        return True
+            if not val.strip() or len(val) < 2:
+                raise ValueError(f"Value too short or non-existent for '{key}': {val}")
 
-    def create_base_structure(self, fields):
+    def populate_attr(self, fields: list[str]) -> None:
         """
         Taken that using an outer function the fields have being validated and filtered,
         this function populates the attributes of the class to later be used to create a model_dump
         """
 
-        attr_map = {
-            "type": "type",
-            "difficulty": "difficulty",
-            "style": "style",
-            "variation": "variation",
-            "instructions": "instructions",
-            "title": "title",
-            "category": "category",
-            "packageId": "packageId"
-        }
-
-        for field in fields:
-            key, val = self.extract_key_val(field)
+        for f in fields:
+            key, val = self.extract_key_val(f)
             key, val = key.strip(), self.strip_quotes(val)
 
             if key == "isPublished":
@@ -170,7 +143,7 @@ class Metadata():
             if key in self.enums:
                 val = self.canonical_enum(self.enums[key], val)
 
-            setattr(self, attr_map[key], val)
+            setattr(self, key, val)
 
 
 

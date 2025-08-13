@@ -1,9 +1,10 @@
 import re
 from logger_base import get_logger
 from typing import List, Optional
-from single.helpers import extract_instructions, parse_mcq_pattern
-from src.helpers import extract_type
+from single.helpers import *
 from src.models import ParseResult, OrderingContent, OrderingWrapper
+
+from core.registry import register_type
 
 # Constraints
 """
@@ -21,8 +22,7 @@ Model
 # 3 - if brackets [] found populate distractors
 # 4 - # indicates sentence instruction population
 
-
-
+@register_type("ordering")
 class Ordering:
 
     def __init__(self, exercise):
@@ -34,19 +34,13 @@ class Ordering:
         self.logger = get_logger(self.__class__.__name__)
 
     def initial_load(self):
-
-        r = extract_type(self.exercise)
-        if isinstance(r, ValueError):
-            return ParseResult(ok=False, errors=[r])
-        self.type, self.variation = r[0].strip(), r[1].strip()
-        return ParseResult(ok=True)
+        self.type, self.variation =  load_metadata(self.exercise).data
 
     def parse_content(self) -> ParseResult:
 
         items: List[OrderingContent] = []
 
         chunks = [c.strip() for c in self.exercise.split(";")]
-        # distractor_re = re.compile(r"\[(.*?)\]")
 
         for sn in chunks:
 
@@ -71,13 +65,7 @@ class Ordering:
 
             sn = result.result_string
             distractors = result.data
-            """
-            print(f"
-                Sentence: {sn}
-                Instruction: {ins}
-                Distractors: {distractors}
-                ")
-            """
+
             items.append(OrderingContent(instruction=ins, content=sn, distractors=distractors))
 
         return ParseResult(
